@@ -9,7 +9,13 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
+      question_user_id: {
+        type: Sequelize.BIGINT
+      },
       question_id: {
+        type: Sequelize.BIGINT
+      },
+      package_question_id: {
         type: Sequelize.BIGINT
       },
       user_id: {

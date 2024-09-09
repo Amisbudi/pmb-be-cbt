@@ -1,12 +1,19 @@
 const express = require('express');
 const router = express.Router();
 const { body, validationResult } = require('express-validator');
-const { PackageQuestions } = require('../models');
+const { PackageQuestions, Types } = require('../models');
 
 /* GET All */
 router.get('/', async (req, res) => {
   try {
-    const data = await PackageQuestions.findAll();
+    const data = await PackageQuestions.findAll({
+      include: [
+        {
+          model: Types,
+          as: "type",
+        },
+      ]
+    });
     return res.json(data);
   } catch (err) {
     console.error(err);

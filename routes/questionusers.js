@@ -1,12 +1,26 @@
 const express = require('express');
 const router = express.Router();
 const { body, validationResult } = require('express-validator');
-const { Questions } = require('../models');
+const { QuestionUsers, PackageQuestions, Questions } = require('../models');
 
 /* GET All */
 router.get('/', async (req, res) => {
   try {
-    const data = await Questions.findAll();
+    const data = await QuestionUsers.findAll({
+      include: [
+        {
+          model: Questions,
+          as: "question",
+          include: {
+            model: PackageQuestions,
+            as: "package"
+          }
+        },{
+          model: PackageQuestions,
+          as: "package",
+        },
+      ]
+    });
     return res.json(data);
   } catch (err) {
     console.error(err);
@@ -19,10 +33,23 @@ router.get('/', async (req, res) => {
 /* GET One by ID */
 router.get('/:id', async (req, res) => {
   try {
-    const data = await Questions.findOne({
+    const data = await QuestionUsers.findOne({
       where: {
         id: req.params.id
-      }
+      },
+      include: [
+        {
+          model: Questions,
+          as: "question",
+          include: {
+            model: PackageQuestions,
+            as: "package"
+          }
+        },{
+          model: PackageQuestions,
+          as: "package",
+        },
+      ]
     });
     if (!data) {
       return res.status(404).json({ message: 'Question not found' });
@@ -37,12 +64,26 @@ router.get('/:id', async (req, res) => {
 });
 
 /* GET One by ID */
-router.get('/packagequestion/:id', async (req, res) => {
+router.get('/packagequestion/:packageQuestionId/:userId', async (req, res) => {
   try {
-    const data = await Questions.findAll({
+    const data = await QuestionUsers.findAll({
       where: {
-        package_question_id: 1
-      }
+        package_question_id: req.params.packageQuestionId,
+        user_id: req.params.userId
+      },
+      include: [
+        {
+          model: Questions,
+          as: "question",
+          include: {
+            model: PackageQuestions,
+            as: "package"
+          }
+        },{
+          model: PackageQuestions,
+          as: "package",
+        },
+      ]
     });
     if (!data) {
       return res.status(404).json({ message: 'Question not found' });
@@ -59,16 +100,43 @@ router.get('/packagequestion/:id', async (req, res) => {
 /* POST */
 router.post('/', [
   body('package_question_id').notEmpty(),
-  body('name').notEmpty(),
+  body('user_id').notEmpty(),
 ], async (req, res) => {
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    await Questions.create(req.body);
+    const package = await PackageQuestions.findOne({
+      where: {
+        id: req.body.package_question_id
+      }
+    });
+    if (!package) {
+      return res.status(404).json({ message: 'Package question not found' });
+    }
+    const questions = await Questions.findAll({
+      where: {
+        package_question_id: package.id
+      }
+    });
+    if (!questions) {
+      return res.status(404).json({ message: 'Questions not found' });
+    }
+    const shuffledQuestions = questions.sort(() => Math.random() - 0.5);
+    const datetime = new Date();
+    let dataBulk = []
+    shuffledQuestions.forEach((shuffle) => {
+      dataBulk.push({
+        question_id: shuffle.id,
+        package_question_id: package.id,
+        user_id: req.body.user_id,
+        date: datetime,
+      });
+    });
+    await QuestionUsers.bulkCreate(dataBulk);
     return res.json({
-      message: 'Question has been created.'
+      message: 'Question for user has been created.'
     });
   } catch (err) {
     console.error(err);
@@ -88,7 +156,7 @@ router.patch('/:id', [
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    const data = await Questions.findOne({
+    const data = await QuestionUsers.findOne({
       where: {
         id: req.params.id
       }
@@ -96,7 +164,7 @@ router.patch('/:id', [
     if (!data) {
       return res.status(404).json({ message: 'Question not found' });
     }
-    await Questions.update(req.body, {
+    await QuestionUsers.update(req.body, {
       where: {
         id: req.params.id
       }
@@ -115,7 +183,7 @@ router.patch('/:id', [
 /* DELETE One by ID */
 router.delete('/:id', async (req, res) => {
   try {
-    const data = await Questions.findOne({
+    const data = await QuestionUsers.findOne({
       where: {
         id: req.params.id
       }
@@ -123,7 +191,7 @@ router.delete('/:id', async (req, res) => {
     if (!data) {
       return res.status(404).json({ message: 'Question not found' });
     }
-    await Questions.destroy({
+    await QuestionUsers.destroy({
       where: {
         id: req.params.id
       }

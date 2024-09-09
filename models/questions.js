@@ -10,7 +10,10 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      Questions.hasMany(models.Answers, { foreignKey: 'question_id' });
+      Questions.hasMany(models.QuestionUsers, { foreignKey: 'question_id' });
+      Questions.hasMany(models.Records, { foreignKey: 'question_id' });
+      Questions.belongsTo(models.PackageQuestions, { foreignKey: 'package_question_id', as: 'package', onDelete: 'RESTRICT', });
     }
   }
   Questions.init({
