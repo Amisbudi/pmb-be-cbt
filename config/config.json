@@ -1,9 +1,9 @@
 {
   "development": {
-    "username": "root",
-    "password": "root",
-    "database": "CAT_db",
-    "host": "127.0.0.1",
+    "username": "trisakti",
+    "password": "Trisakti",
+    "database": "amisbud1_cat_db",
+    "host": "andria-db.id.domainesia.com",
     "dialect": "mysql"
   },
   "test": {
