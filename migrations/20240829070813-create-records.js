@@ -24,6 +24,10 @@ module.exports = {
       answer_id: {
         type: Sequelize.BIGINT
       },
+      photo: {
+        allowNull: true,
+        type: Sequelize.BLOB('medium'),
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

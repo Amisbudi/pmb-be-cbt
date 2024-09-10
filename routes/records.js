@@ -42,7 +42,13 @@ router.get('/:id', async (req, res) => {
     if (!data) {
       return res.status(404).json({ message: 'Record not found' });
     }
-    return res.json(data);
+    if (!data.photo) {
+      return res.status(404).json({ message: 'No image found for this record' });
+    }
+
+    res.set('Content-Type', 'image/jpeg');
+    res.set('Content-Disposition', `attachment; filename="image-${data.user_id}/${data.question_id}/${data.answer_id}.jpg"`);
+    res.send(data.photo);
   } catch (err) {
     console.error(err);
     return res.status(500).json({
@@ -91,7 +97,17 @@ router.post('/', [
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    await Records.create(req.body);
+    const base64Image = req.body.photo;
+    const base64Data = base64Image.replace(/^data:image\/\w+;base64,/, '');
+    const bufferData = Buffer.from(base64Data, 'base64');
+    await Records.create({
+      question_user_id: req.body.question_user_id,
+      question_id: req.body.question_id,
+      package_question_id: req.body.package_question_id,
+      user_id: req.body.user_id,
+      answer_id: req.body.answer_id,
+      photo: bufferData
+    });
     return res.json({
       message: 'Record has been created.'
     });
@@ -122,8 +138,12 @@ router.patch('/:questionId/:packageQuestionId', [
     if (!data) {
       return res.status(404).json({ message: 'Record not found' });
     }
+    const base64Image = req.body.photo;
+    const base64Data = base64Image.replace(/^data:image\/\w+;base64,/, '');
+    const bufferData = Buffer.from(base64Data, 'base64');
     await Records.update({
-      answer_id: req.body.answer_id
+      answer_id: req.body.answer_id,
+      photo: bufferData,
     }, {
       where: {
         question_id: req.params.questionId,

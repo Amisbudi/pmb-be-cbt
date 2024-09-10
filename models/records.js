@@ -20,7 +20,8 @@ module.exports = (sequelize, DataTypes) => {
     question_id: DataTypes.BIGINT,
     package_question_id: DataTypes.BIGINT,
     user_id: DataTypes.BIGINT,
-    answer_id: DataTypes.BIGINT
+    answer_id: DataTypes.BIGINT,
+    photo: DataTypes.BLOB('medium')
   }, {
     sequelize,
     modelName: 'Records',
