@@ -6,15 +6,30 @@ const { PackageQuestions, Types } = require('../models');
 /* GET All */
 router.get('/', async (req, res) => {
   try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 5;
+    const offset = (page - 1) * limit;
     const data = await PackageQuestions.findAll({
       include: [
         {
           model: Types,
           as: "type",
         },
-      ]
+      ],
+      limit: limit,
+      offset: offset,
     });
-    return res.json(data);
+
+    const totalItems = await PackageQuestions.count();
+    const totalPages = Math.ceil(totalItems / limit);
+
+    return res.json({
+      data,
+      limit,
+      currentPage: page,
+      totalPages: totalPages,
+      totalItems: totalItems,
+    });
   } catch (err) {
     console.error(err);
     return res.status(500).json({

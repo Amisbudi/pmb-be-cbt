@@ -9,13 +9,7 @@ module.exports = {
       status: true,
       createdAt: new Date(),
       updatedAt: new Date(),
-    },{
-      type_id: 1,
-      name: 'TPA 2',
-      status: true,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    },], {});
+    }], {});
   },
 
   async down(queryInterface, Sequelize) {
