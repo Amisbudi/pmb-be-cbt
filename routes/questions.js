@@ -1,13 +1,34 @@
 const express = require('express');
 const router = express.Router();
 const { body, validationResult } = require('express-validator');
-const { Questions } = require('../models');
+const { Questions, PackageQuestions } = require('../models');
 
 /* GET All */
 router.get('/', async (req, res) => {
   try {
-    const data = await Questions.findAll();
-    return res.json(data);
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 5;
+    const offset = (page - 1) * limit;
+    const data = await Questions.findAll({
+      include: [
+        {
+          model: PackageQuestions,
+          as: "package",
+        },
+      ],
+      limit: limit,
+      offset: offset,
+    });
+    const totalItems = await Questions.count();
+    const totalPages = Math.ceil(totalItems / limit);
+
+    return res.json({
+      data,
+      limit,
+      currentPage: page,
+      totalPages: totalPages,
+      totalItems: totalItems,
+    });
   } catch (err) {
     console.error(err);
     return res.status(500).json({
