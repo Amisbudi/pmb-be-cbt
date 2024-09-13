@@ -35,7 +35,7 @@ router.get('/:id', async (req, res) => {
   try {
     const data = await QuestionUsers.findOne({
       where: {
-        id: req.params.id
+        id: req.params.id,
       },
       include: [
         {
