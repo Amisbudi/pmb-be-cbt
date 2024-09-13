@@ -10,6 +10,13 @@ module.exports = {
       status: true,
       createdAt: new Date(),
       updatedAt: new Date(),
+    },{
+      category_id: 1,
+      name: 'English',
+      passing_grade: 75,
+      status: true,
+      createdAt: new Date(),
+      updatedAt: new Date(),
     }], {});
   },
 

@@ -33,6 +33,38 @@ module.exports = {
       status: true,
       createdAt: new Date(),
       updatedAt: new Date(),
+    },
+    //
+    {
+      package_question_id: 2,
+      name: 'What is the correct verb to complete the sentence?',
+      status: true,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    },{
+      package_question_id: 2,
+      name: 'Choose the correct form of the adjective: "This is the ____ book I have ever read."',
+      status: true,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    },{
+      package_question_id: 2,
+      name: 'Select the correct word to complete the sentence: "He has been working here ____ three years."',
+      status: true,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    },{
+      package_question_id: 2,
+      name: 'Choose the correct pronoun: "____ are going to the party tomorrow."',
+      status: true,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    },{
+      package_question_id: 2,
+      name: 'Which of the following is a synonym for "happy"?',
+      status: true,
+      createdAt: new Date(),
+      updatedAt: new Date(),
     }], {});
   },
 
