@@ -15,10 +15,12 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   QuestionUsers.init({
+    number: DataTypes.INTEGER,
     question_id: DataTypes.BIGINT,
     package_question_id: DataTypes.BIGINT,
     user_id: DataTypes.BIGINT,
-    date: DataTypes.DATE
+    date_start: DataTypes.DATE,
+    date_end: DataTypes.DATE
   }, {
     sequelize,
     modelName: 'QuestionUsers',

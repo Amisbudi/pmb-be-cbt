@@ -15,7 +15,7 @@ router.get('/', async (req, res) => {
             model: PackageQuestions,
             as: "package"
           }
-        },{
+        }, {
           model: PackageQuestions,
           as: "package",
         },
@@ -31,11 +31,12 @@ router.get('/', async (req, res) => {
 });
 
 /* GET One by ID */
-router.get('/:id', async (req, res) => {
+router.get('/:questionNumber/:packageQuestion', async (req, res) => {
   try {
     const data = await QuestionUsers.findOne({
       where: {
-        id: req.params.id,
+        number: req.params.questionNumber,
+        package_question_id: req.params.packageQuestion
       },
       include: [
         {
@@ -45,7 +46,7 @@ router.get('/:id', async (req, res) => {
             model: PackageQuestions,
             as: "package"
           }
-        },{
+        }, {
           model: PackageQuestions,
           as: "package",
         },
@@ -79,7 +80,7 @@ router.get('/packagequestion/:packageQuestionId/:userId', async (req, res) => {
             model: PackageQuestions,
             as: "package"
           }
-        },{
+        }, {
           model: PackageQuestions,
           as: "package",
         },
@@ -124,14 +125,18 @@ router.post('/', [
       return res.status(404).json({ message: 'Questions not found' });
     }
     const shuffledQuestions = questions.sort(() => Math.random() - 0.5);
-    const datetime = new Date();
+    const dateStart = new Date();
+    const dateEnd = new Date();
+    dateEnd.setMinutes(dateEnd.getMinutes() + 1);
     let dataBulk = []
-    shuffledQuestions.forEach((shuffle) => {
+    shuffledQuestions.forEach((shuffle, index) => {
       dataBulk.push({
+        number: index + 1,
         question_id: shuffle.id,
         package_question_id: package.id,
         user_id: req.body.user_id,
-        date: datetime,
+        date_start: dateStart.toISOString(),
+        date_end: dateEnd.toISOString()
       });
     });
     await QuestionUsers.bulkCreate(dataBulk);

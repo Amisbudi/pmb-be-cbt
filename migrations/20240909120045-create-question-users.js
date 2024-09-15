@@ -9,6 +9,9 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
+      number: {
+        type: Sequelize.INTEGER,
+      },
       question_id: {
         type: Sequelize.BIGINT
       },
@@ -18,7 +21,10 @@ module.exports = {
       user_id: {
         type: Sequelize.BIGINT
       },
-      date: {
+      date_start: {
+        type: Sequelize.DATE
+      },
+      date_end: {
         type: Sequelize.DATE
       },
       createdAt: {
