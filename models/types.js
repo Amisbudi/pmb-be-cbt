@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Types.init({
-    category_id: DataTypes.INTEGER,
+    category_id: DataTypes.BIGINT,
     name: DataTypes.STRING,
     passing_grade: DataTypes.FLOAT,
     status: DataTypes.BOOLEAN

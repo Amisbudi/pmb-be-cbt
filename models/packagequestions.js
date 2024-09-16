@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   PackageQuestions.init({
-    type_id: DataTypes.INTEGER,
+    type_id: DataTypes.BIGINT,
     name: DataTypes.STRING,
     status: DataTypes.BOOLEAN
   }, {

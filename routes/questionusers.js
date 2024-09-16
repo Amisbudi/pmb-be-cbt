@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { body, validationResult } = require('express-validator');
-const { QuestionUsers, PackageQuestions, Questions } = require('../models');
+const { QuestionUsers, PackageQuestions, Questions, ViewQuestionUsers, Records } = require('../models');
 
 /* GET All */
 router.get('/', async (req, res) => {
@@ -22,10 +22,40 @@ router.get('/', async (req, res) => {
       ]
     });
     return res.json(data);
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
     return res.status(500).json({
-      message: 'Trouble in the server'
+      message: error.message
+    });
+  }
+});
+
+router.get(`/results`, async(req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 5;
+    const offset = (page - 1) * limit;
+
+    const data = await ViewQuestionUsers.findAll({
+      attributes: {
+        exclude: ['id', 'createdAt', 'updatedAt']
+      },
+      limit: limit,
+      offset: offset,
+    });
+
+    const totalItems = await ViewQuestionUsers.count();
+    const totalPages = Math.ceil(totalItems / limit);
+
+    return res.json({
+      data,
+      limit,
+      currentPage: page,
+      totalPages: totalPages,
+      totalItems: totalItems,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message
     });
   }
 });
@@ -60,6 +90,39 @@ router.get('/:questionNumber/:packageQuestion', async (req, res) => {
     console.error(err);
     return res.status(500).json({
       message: 'Trouble in the server'
+    });
+  }
+});
+
+/* GET One by ID */
+router.get('/questions/:packageQuestionId/:userId', async (req, res) => {
+  try {
+    const data = await QuestionUsers.findAll({
+      where: {
+        package_question_id: req.params.packageQuestionId,
+        user_id: req.params.userId
+      },
+      include: [
+        {
+          model: Questions,
+          as: "question",
+          include: {
+            model: PackageQuestions,
+            as: "package"
+          }
+        }, {
+          model: PackageQuestions,
+          as: "package",
+        },
+      ]
+    });
+    if (!data) {
+      return res.status(404).json({ message: 'Questions not found' });
+    }
+    return res.json(data);
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message
     });
   }
 });
@@ -127,7 +190,7 @@ router.post('/', [
     const shuffledQuestions = questions.sort(() => Math.random() - 0.5);
     const dateStart = new Date();
     const dateEnd = new Date();
-    dateEnd.setMinutes(dateEnd.getMinutes() + 1);
+    dateEnd.setMinutes(dateEnd.getMinutes() + 60);
     let dataBulk = []
     shuffledQuestions.forEach((shuffle, index) => {
       dataBulk.push({
@@ -208,6 +271,41 @@ router.delete('/:id', async (req, res) => {
     console.error(err);
     return res.status(500).json({
       message: 'Trouble in the server'
+    });
+  }
+});
+
+/* DELETE One by ID */
+router.delete('/results/:packageQuestionId/:userId', async (req, res) => {
+  try {
+    const data = await QuestionUsers.findOne({
+      where: {
+        package_question_id: req.params.packageQuestionId,
+        user_id: req.params.userId,
+      }
+    });
+    if (!data) {
+      return res.status(404).json({ message: 'Results not found' });
+    }
+    await QuestionUsers.destroy({
+      where: {
+        package_question_id: req.params.packageQuestionId,
+        user_id: req.params.userId,
+      }
+    });
+
+    await Records.destroy({
+      where: {
+        package_question_id: req.params.packageQuestionId,
+        user_id: req.params.userId,
+      }
+    });
+    return res.json({
+      message: 'Results has been deleted.'
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message
     });
   }
 });
