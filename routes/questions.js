@@ -29,10 +29,9 @@ router.get('/', async (req, res) => {
       totalPages: totalPages,
       totalItems: totalItems,
     });
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
     return res.status(500).json({
-      message: 'Trouble in the server'
+      message: error.message
     });
   }
 });
@@ -49,30 +48,28 @@ router.get('/:id', async (req, res) => {
       return res.status(404).json({ message: 'Question not found' });
     }
     return res.json(data);
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
     return res.status(500).json({
-      message: 'Trouble in the server'
+      message: error.message
     });
   }
 });
 
-/* GET One by ID */
+/* GET by packageQuestionID */
 router.get('/packagequestion/:id', async (req, res) => {
   try {
     const data = await Questions.findAll({
       where: {
-        package_question_id: 1
+        package_question_id: req.params.id
       }
     });
     if (!data) {
       return res.status(404).json({ message: 'Question not found' });
     }
     return res.json(data);
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
     return res.status(500).json({
-      message: 'Trouble in the server'
+      message: error.message
     });
   }
 });
@@ -123,10 +120,9 @@ router.post('/', [
     return res.json({
       message: 'Question has been created.'
     });
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
     return res.status(500).json({
-      message: 'Trouble in the server'
+      message: error.message
     });
   }
 });
@@ -162,7 +158,11 @@ router.patch('/:id', [
       return res.status(404).json({ message: 'Question not found' });
     }
 
-    await Questions.update(req.body, {
+    await Questions.update({
+      package_question_id: req.body.package_question_id,
+      name: req.body.name,
+      status: req.body.status
+    }, {
       where: {
         id: req.params.id
       }
@@ -210,10 +210,9 @@ router.patch('/:id', [
     return res.json({
       message: 'Question has been updated.'
     });
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
     return res.status(500).json({
-      message: 'Trouble in the server'
+      message: error.message
     });
   }
 });
@@ -237,10 +236,9 @@ router.delete('/:id', async (req, res) => {
     return res.json({
       message: 'Question has been deleted.'
     });
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
     return res.status(500).json({
-      message: 'Trouble in the server'
+      message: error.message
     });
   }
 });

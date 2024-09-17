@@ -8,10 +8,9 @@ router.get('/', async (req, res) => {
   try {
     const data = await Answers.findAll();
     return res.json(data);
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
     return res.status(500).json({
-      message: 'Trouble in the server'
+      message: error.message
     });
   }
 });
@@ -34,15 +33,14 @@ router.get('/:id', async (req, res) => {
       return res.status(404).json({ message: 'Answer not found' });
     }
     return res.json(data);
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
     return res.status(500).json({
-      message: 'Trouble in the server'
+      message: error.message
     });
   }
 });
 
-/* GET One by ID */
+/* GET by Question ID */
 router.get('/question/:id', async (req, res) => {
   try {
     const data = await Answers.findAll({
@@ -60,10 +58,9 @@ router.get('/question/:id', async (req, res) => {
       return res.status(404).json({ message: 'Answer not found' });
     }
     return res.json(data);
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
     return res.status(500).json({
-      message: 'Trouble in the server'
+      message: error.message
     });
   }
 });
@@ -82,10 +79,9 @@ router.post('/', [
     return res.json({
       message: 'Answer has been created.'
     });
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
     return res.status(500).json({
-      message: 'Trouble in the server'
+      message: error.message
     });
   }
 });
@@ -116,10 +112,9 @@ router.patch('/:id', [
     return res.json({
       message: 'Answer has been updated.'
     });
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
     return res.status(500).json({
-      message: 'Trouble in the server'
+      message: error.message
     });
   }
 });
@@ -143,10 +138,9 @@ router.delete('/:id', async (req, res) => {
     return res.json({
       message: 'Answer has been deleted.'
     });
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
     return res.status(500).json({
-      message: 'Trouble in the server'
+      message: error.message
     });
   }
 });

@@ -9,8 +9,7 @@ module.exports = {
       status: true,
       createdAt: new Date(),
       updatedAt: new Date(),
-    }
-    ,{
+    },{
       type_id: 2,
       name: 'English 1',
       status: true,

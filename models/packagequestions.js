@@ -14,6 +14,7 @@ module.exports = (sequelize, DataTypes) => {
       PackageQuestions.hasMany(models.QuestionUsers, { foreignKey: 'package_question_id' });
       PackageQuestions.hasMany(models.Records, { foreignKey: 'package_question_id' });
       PackageQuestions.belongsTo(models.Types, { foreignKey: 'type_id', as: 'type', onDelete: 'RESTRICT', });
+      PackageQuestions.hasMany(models.PackageQuestionUsers, { foreignKey: 'package_question_id' });
     }
   }
   PackageQuestions.init({

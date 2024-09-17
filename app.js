@@ -7,11 +7,12 @@ const cors = require('cors');
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const typesRouter = require('./routes/types');
-const packagequestionsRouter = require('./routes/packagequestions');
-const questionsRouter = require('./routes/questions');
-const questionUsersRouter = require('./routes/questionusers');
 const answersRouter = require('./routes/answers');
 const recordsRouter = require('./routes/records');
+const questionsRouter = require('./routes/questions');
+const questionUsersRouter = require('./routes/questionusers');
+const packagequestionsRouter = require('./routes/packagequestions');
+const packagequestionusersRouter = require('./routes/packagequestionusers');
 
 const app = express();
 
@@ -25,10 +26,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/types', typesRouter);
-app.use('/packagequestions', packagequestionsRouter);
-app.use('/questions', questionsRouter);
-app.use('/questionusers', questionUsersRouter);
 app.use('/answers', answersRouter);
 app.use('/records', recordsRouter);
+app.use('/questions', questionsRouter);
+app.use('/questionusers', questionUsersRouter);
+app.use('/packagequestions', packagequestionsRouter);
+app.use('/packagequestionusers', packagequestionusersRouter);
 
 module.exports = app;

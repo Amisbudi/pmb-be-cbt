@@ -30,10 +30,9 @@ router.get('/', async (req, res) => {
       totalPages: totalPages,
       totalItems: totalItems,
     });
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
     return res.status(500).json({
-      message: 'Trouble in the server'
+      message: error.message
     });
   }
 });
@@ -50,10 +49,9 @@ router.get('/:id', async (req, res) => {
       return res.status(404).json({ message: 'Package question not found' });
     }
     return res.json(data);
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
     return res.status(500).json({
-      message: 'Trouble in the server'
+      message: error.message
     });
   }
 });
@@ -68,14 +66,16 @@ router.post('/', [
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    await PackageQuestions.create(req.body);
+    await PackageQuestions.create({
+      type_id: req.body.type_id,
+      name: req.body.name,
+    });
     return res.json({
       message: 'Package question has been created.'
     });
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
     return res.status(500).json({
-      message: 'Trouble in the server'
+      message: error.message
     });
   }
 });
@@ -98,7 +98,11 @@ router.patch('/:id', [
     if (!data) {
       return res.status(404).json({ message: 'Package question not found' });
     }
-    await PackageQuestions.update(req.body, {
+    await PackageQuestions.update({
+      type_id: req.body.type_id,
+      name: req.body.name,
+      status: req.body.status,
+    }, {
       where: {
         id: req.params.id
       }
@@ -106,10 +110,9 @@ router.patch('/:id', [
     return res.json({
       message: 'Package question has been updated.'
     });
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
     return res.status(500).json({
-      message: 'Trouble in the server'
+      message: error.message
     });
   }
 });
@@ -133,10 +136,9 @@ router.delete('/:id', async (req, res) => {
     return res.json({
       message: 'Package question has been deleted.'
     });
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
     return res.status(500).json({
-      message: 'Trouble in the server'
+      message: error.message
     });
   }
 });

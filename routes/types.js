@@ -8,10 +8,9 @@ router.get('/', async (req, res) => {
   try {
     const data = await Types.findAll();
     return res.json(data);
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
     return res.status(500).json({
-      message: 'Trouble in the server'
+      message: error.message
     });
   }
 });
@@ -28,10 +27,9 @@ router.get('/:id', async (req, res) => {
       return res.status(404).json({ message: 'Type not found' });
     }
     return res.json(data);
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
     return res.status(500).json({
-      message: 'Trouble in the server'
+      message: error.message
     });
   }
 });
@@ -51,10 +49,9 @@ router.post('/', [
     return res.json({
       message: 'Type has been created.'
     });
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
     return res.status(500).json({
-      message: 'Trouble in the server'
+      message: error.message
     });
   }
 });
@@ -86,10 +83,9 @@ router.patch('/:id', [
     return res.json({
       message: 'Type has been updated.'
     });
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
     return res.status(500).json({
-      message: 'Trouble in the server'
+      message: error.message
     });
   }
 });
@@ -113,10 +109,9 @@ router.delete('/:id', async (req, res) => {
     return res.json({
       message: 'Type has been deleted.'
     });
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
     return res.status(500).json({
-      message: 'Trouble in the server'
+      message: error.message
     });
   }
 });

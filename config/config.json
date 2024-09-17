@@ -4,7 +4,8 @@
     "password": "root",
     "database": "cat_db",
     "host": "localhost",
-    "dialect": "mysql"
+    "dialect": "mysql",
+    "timezone": "+07:00"
   },
   "test": {
     "username": "amisbud1_trisaksi",

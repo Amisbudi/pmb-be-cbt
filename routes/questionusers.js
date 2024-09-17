@@ -86,15 +86,14 @@ router.get('/:questionNumber/:packageQuestion', async (req, res) => {
       return res.status(404).json({ message: 'Question not found' });
     }
     return res.json(data);
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
     return res.status(500).json({
-      message: 'Trouble in the server'
+      message: error.message
     });
   }
 });
 
-/* GET One by ID */
+/* GET Questions By PackageQuestionID & UserID */
 router.get('/questions/:packageQuestionId/:userId', async (req, res) => {
   try {
     const data = await QuestionUsers.findAll({
@@ -127,7 +126,7 @@ router.get('/questions/:packageQuestionId/:userId', async (req, res) => {
   }
 });
 
-/* GET One by ID */
+/* GET packagequestion By PackageQuestionID & UserID */
 router.get('/packagequestion/:packageQuestionId/:userId', async (req, res) => {
   try {
     const data = await QuestionUsers.findAll({
@@ -153,10 +152,9 @@ router.get('/packagequestion/:packageQuestionId/:userId', async (req, res) => {
       return res.status(404).json({ message: 'Question not found' });
     }
     return res.json(data);
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
     return res.status(500).json({
-      message: 'Trouble in the server'
+      message: error.message
     });
   }
 });
@@ -206,54 +204,19 @@ router.post('/', [
     return res.json({
       message: 'Question for user has been created.'
     });
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
     return res.status(500).json({
-      message: 'Trouble in the server'
+      message: error.message
     });
   }
 });
 
-/* PATCH */
-router.patch('/:id', [
-  body('package_question_id').notEmpty(),
-  body('name').notEmpty(),
-], async (req, res) => {
-  try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
-    const data = await QuestionUsers.findOne({
-      where: {
-        id: req.params.id
-      }
-    });
-    if (!data) {
-      return res.status(404).json({ message: 'Question not found' });
-    }
-    await QuestionUsers.update(req.body, {
-      where: {
-        id: req.params.id
-      }
-    });
-    return res.json({
-      message: 'Question has been updated.'
-    });
-  } catch (err) {
-    console.error(err);
-    return res.status(500).json({
-      message: 'Trouble in the server'
-    });
-  }
-});
-
-/* DELETE One by ID */
-router.delete('/:id', async (req, res) => {
+/* DELETE by PackageQUestionID */
+router.delete('/:packageQuestionId', async (req, res) => {
   try {
     const data = await QuestionUsers.findOne({
       where: {
-        id: req.params.id
+        package_question_id: req.params.packageQuestionId
       }
     });
     if (!data) {
@@ -261,16 +224,15 @@ router.delete('/:id', async (req, res) => {
     }
     await QuestionUsers.destroy({
       where: {
-        id: req.params.id
+        package_question_id: req.params.packageQuestionId
       }
     });
     return res.json({
       message: 'Question has been deleted.'
     });
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
     return res.status(500).json({
-      message: 'Trouble in the server'
+      message: error.message
     });
   }
 });

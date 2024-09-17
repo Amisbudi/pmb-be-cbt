@@ -23,10 +23,9 @@ router.get('/', async (req, res) => {
       ]
     });
     return res.json(data);
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
     return res.status(500).json({
-      message: 'Trouble in the server'
+      message: error.message
     });
   }
 });
@@ -49,15 +48,14 @@ router.get('/:id', async (req, res) => {
     res.set('Content-Type', 'image/jpeg');
     res.set('Content-Disposition', `attachment; filename="image-${data.user_id}/${data.question_id}/${data.answer_id}.jpg"`);
     res.send(data.photo);
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
     return res.status(500).json({
-      message: 'Trouble in the server'
+      message: error.message
     });
   }
 });
 
-/* GET One by ID */
+/* GET Question by QuestionID & PackageQuestionID */
 router.get('/question/:questionId/:packageQuestionId', async (req, res) => {
   try {
     const data = await Records.findOne({
@@ -76,10 +74,9 @@ router.get('/question/:questionId/:packageQuestionId', async (req, res) => {
       return res.status(404).json({ message: 'Record not found' });
     }
     return res.json(data);
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
     return res.status(500).json({
-      message: 'Trouble in the server'
+      message: error.message
     });
   }
 });
@@ -111,10 +108,9 @@ router.post('/', [
     return res.json({
       message: 'Record has been created.'
     });
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
     return res.status(500).json({
-      message: 'Trouble in the server'
+      message: error.message
     });
   }
 });
@@ -153,10 +149,9 @@ router.patch('/:questionId/:packageQuestionId', [
     return res.json({
       message: 'Record has been updated.'
     });
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
     return res.status(500).json({
-      message: 'Trouble in the server'
+      message: error.message
     });
   }
 });
@@ -180,10 +175,9 @@ router.delete('/:id', async (req, res) => {
     return res.json({
       message: 'Record has been deleted.'
     });
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
     return res.status(500).json({
-      message: 'Trouble in the server'
+      message: error.message
     });
   }
 });
