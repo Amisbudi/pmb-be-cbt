@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { body, validationResult } = require('express-validator');
-const { QuestionUsers, PackageQuestions, Questions, ViewQuestionUsers, Records } = require('../models');
+const { QuestionUsers, PackageQuestions, PackageQuestionUsers, Questions, ViewQuestionUsers, Records } = require('../models');
 
 /* GET All */
 router.get('/', async (req, res) => {
@@ -255,7 +255,12 @@ router.delete('/results/:packageQuestionId/:userId', async (req, res) => {
         user_id: req.params.userId,
       }
     });
-
+    await PackageQuestionUsers.destroy({
+      where: {
+        package_question_id: req.params.packageQuestionId,
+        user_id: req.params.userId,
+      }
+    });
     await Records.destroy({
       where: {
         package_question_id: req.params.packageQuestionId,
@@ -263,7 +268,7 @@ router.delete('/results/:packageQuestionId/:userId', async (req, res) => {
       }
     });
     return res.json({
-      message: 'Results has been deleted.'
+      message: 'Questions, Packages, Records user has been deleted.'
     });
   } catch (error) {
     return res.status(500).json({

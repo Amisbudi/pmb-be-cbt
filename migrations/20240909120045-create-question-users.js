@@ -27,6 +27,10 @@ module.exports = {
       date_end: {
         type: Sequelize.DATE
       },
+      answered: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

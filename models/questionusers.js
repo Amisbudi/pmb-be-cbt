@@ -20,7 +20,8 @@ module.exports = (sequelize, DataTypes) => {
     package_question_id: DataTypes.BIGINT,
     user_id: DataTypes.BIGINT,
     date_start: DataTypes.DATE,
-    date_end: DataTypes.DATE
+    date_end: DataTypes.DATE,
+    answered: DataTypes.BOOLEAN
   }, {
     sequelize,
     modelName: 'QuestionUsers',

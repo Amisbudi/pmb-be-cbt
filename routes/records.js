@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { body, validationResult } = require('express-validator');
-const { Records, Answers, Questions, PackageQuestions } = require('../models');
+const { Records, Answers, Questions, QuestionUsers, PackageQuestions } = require('../models');
 
 /* GET All */
 router.get('/', async (req, res) => {
@@ -104,6 +104,13 @@ router.post('/', [
       user_id: req.body.user_id,
       answer_id: req.body.answer_id,
       photo: bufferData
+    });
+    await QuestionUsers.update({
+      answered: true
+    }, {
+      where: {
+        question_id: req.body.question_id
+      }
     });
     return res.json({
       message: 'Record has been created.'

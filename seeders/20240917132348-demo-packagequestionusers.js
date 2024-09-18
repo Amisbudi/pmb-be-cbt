@@ -7,7 +7,11 @@ module.exports = {
       package_question_id: 1,
       user_id: 1,
       classes: 'Reguler',
-      date_exam: null,
+      date_exam: (() => {
+        let examDate = new Date();
+        examDate.setSeconds(examDate.getSeconds() + 10);
+        return examDate;
+      })(),
       date_start: null,
       date_end: null,
       status: true,
@@ -16,10 +20,18 @@ module.exports = {
     },{
       package_question_id: 2,
       user_id: 1,
-      classes: 'Reguler',
+      classes: 'Employee',
       date_exam: null,
-      date_start: null,
-      date_end: null,
+      date_start: (() => {
+        let examDate = new Date();
+        examDate.setSeconds(examDate.getSeconds() + 10);
+        return examDate;
+      })(),
+      date_end: (() => {
+        let examDate = new Date();
+        examDate.setDate(examDate.getDate() + 1);
+        return examDate;
+      })(),
       status: true,
       createdAt: new Date(),
       updatedAt: new Date(),
