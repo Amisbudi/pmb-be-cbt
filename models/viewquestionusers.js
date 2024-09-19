@@ -19,7 +19,7 @@ module.exports = (sequelize, DataTypes) => {
     correct_answers: DataTypes.BIGINT,
     incorrect_answers: DataTypes.BIGINT,
     total_questions: DataTypes.BIGINT,
-    user_id: DataTypes.BIGINT,
+    user_id: DataTypes.STRING,
   }, {
     sequelize,
     modelName: 'ViewQuestionUsers',

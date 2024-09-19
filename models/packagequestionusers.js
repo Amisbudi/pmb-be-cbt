@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
   }
   PackageQuestionUsers.init({
     package_question_id: DataTypes.BIGINT,
-    user_id: DataTypes.BIGINT,
+    user_id: DataTypes.STRING,
     classes: DataTypes.STRING,
     date_exam: DataTypes.DATE,
     date_start: DataTypes.DATE,

@@ -5,7 +5,7 @@ module.exports = {
   async up (queryInterface, Sequelize) {
     await queryInterface.bulkInsert('PackageQuestionUsers', [{
       package_question_id: 1,
-      user_id: 1,
+      user_id: "3277777777777777",
       classes: 'Reguler',
       date_exam: (() => {
         let examDate = new Date();
@@ -19,7 +19,7 @@ module.exports = {
       updatedAt: new Date(),
     },{
       package_question_id: 2,
-      user_id: 1,
+      user_id: "3277777777777777",
       classes: 'Employee',
       date_exam: null,
       date_start: (() => {

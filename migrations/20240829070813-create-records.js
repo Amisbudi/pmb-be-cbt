@@ -19,7 +19,7 @@ module.exports = {
         type: Sequelize.BIGINT
       },
       user_id: {
-        type: Sequelize.BIGINT
+        type: Sequelize.STRING
       },
       answer_id: {
         type: Sequelize.BIGINT

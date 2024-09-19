@@ -13,7 +13,7 @@ module.exports = {
         type: Sequelize.BIGINT
       },
       user_id: {
-        type: Sequelize.BIGINT
+        type: Sequelize.STRING
       },
       classes: {
         type: Sequelize.STRING,

@@ -18,7 +18,7 @@ module.exports = (sequelize, DataTypes) => {
     number: DataTypes.INTEGER,
     question_id: DataTypes.BIGINT,
     package_question_id: DataTypes.BIGINT,
-    user_id: DataTypes.BIGINT,
+    user_id: DataTypes.STRING,
     date_start: DataTypes.DATE,
     date_end: DataTypes.DATE,
     answered: DataTypes.BOOLEAN
