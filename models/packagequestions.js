@@ -24,6 +24,8 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'PackageQuestions',
+    tableName: 'cbt_package_questions',
+    underscored: true,
   });
   return PackageQuestions;
 };

@@ -3,7 +3,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
-    await queryInterface.bulkInsert('PackageQuestionUsers', [{
+    await queryInterface.bulkInsert('cbt_package_question_users', [{
       package_question_id: 1,
       user_id: "3277777777777777",
       classes: 'Reguler',
@@ -15,8 +15,8 @@ module.exports = {
       date_start: null,
       date_end: null,
       status: true,
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      created_at: new Date(),
+      updated_at: new Date(),
     },{
       package_question_id: 2,
       user_id: "3277777777777777",
@@ -33,12 +33,12 @@ module.exports = {
         return examDate;
       })(),
       status: true,
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      created_at: new Date(),
+      updated_at: new Date(),
     }], {});
   },
 
   async down (queryInterface, Sequelize) {
-    await queryInterface.bulkDelete('PackageQuestionUsers', null, {});
+    await queryInterface.bulkDelete('cbt_package_question_users', null, {});
   }
 };

@@ -25,6 +25,8 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'QuestionUsers',
+    tableName: 'cbt_question_users',
+    underscored: true,
   });
   return QuestionUsers;
 };

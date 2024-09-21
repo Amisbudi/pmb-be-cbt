@@ -12,19 +12,19 @@ module.exports = {
         tq.total_questions,
         qu.user_id
       FROM
-        QuestionUsers qu
+        cbt_question_users qu
       INNER JOIN
-        Records r ON qu.question_id = r.question_id
+        cbt_records r ON qu.question_id = r.question_id
       INNER JOIN
-        Answers a ON r.answer_id = a.id
+        cbt_answers a ON r.answer_id = a.id
       INNER JOIN
-        PackageQuestions pq ON qu.package_question_id = pq.id
+        cbt_package_questions pq ON qu.package_question_id = pq.id
       INNER JOIN
       (SELECT
           package_question_id,
           COUNT(DISTINCT question_id) AS total_questions
       FROM
-          QuestionUsers
+          cbt_question_users
       GROUP BY
           package_question_id
       ) tq ON qu.package_question_id = tq.package_question_id

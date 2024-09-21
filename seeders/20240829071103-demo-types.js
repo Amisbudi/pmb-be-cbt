@@ -3,24 +3,24 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.bulkInsert('Types', [{
+    await queryInterface.bulkInsert('cbt_types', [{
       category_id: 1,
       name: 'TPA',
       passing_grade: 75,
       status: true,
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      created_at: new Date(),
+      updated_at: new Date(),
     },{
       category_id: 1,
       name: 'English',
       passing_grade: 75,
       status: true,
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      created_at: new Date(),
+      updated_at: new Date(),
     }], {});
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.bulkDelete('Types', null, {});
+    await queryInterface.bulkDelete('cbt_types', null, {});
   }
 };

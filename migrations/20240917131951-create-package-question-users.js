@@ -2,7 +2,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('PackageQuestionUsers', {
+    await queryInterface.createTable('cbt_package_question_users', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -35,17 +35,17 @@ module.exports = {
         type: Sequelize.BOOLEAN,
         defaultValue: false
       },
-      createdAt: {
+      created_at: {
         allowNull: false,
         type: Sequelize.DATE
       },
-      updatedAt: {
+      updated_at: {
         allowNull: false,
         type: Sequelize.DATE
       }
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('PackageQuestionUsers');
+    await queryInterface.dropTable('cbt_package_question_users');
   }
 };
