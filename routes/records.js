@@ -3,7 +3,7 @@ const router = express.Router();
 const { body, validationResult } = require('express-validator');
 const { Records, Answers, Questions, QuestionUsers, PackageQuestions } = require('../models');
 
-/* GET All */
+/* records */
 router.get('/', async (req, res) => {
   try {
     const data = await Records.findAll({
@@ -30,7 +30,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-/* GET One by ID */
+/* record by id */
 router.get('/:id', async (req, res) => {
   try {
     const data = await Records.findOne({
@@ -55,7 +55,7 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-/* GET Question by QuestionID & PackageQuestionID */
+/* question by question id & package question */
 router.get('/question/:questionId/:packageQuestionId', async (req, res) => {
   try {
     const data = await Records.findOne({
@@ -81,7 +81,7 @@ router.get('/question/:questionId/:packageQuestionId', async (req, res) => {
   }
 });
 
-/* POST */
+/* record */
 router.post('/', [
   body('question_user_id').notEmpty(),
   body('question_id').notEmpty(),
@@ -122,7 +122,7 @@ router.post('/', [
   }
 });
 
-/* PATCH */
+/* record by question id & package question id */
 router.patch('/:questionId/:packageQuestionId', [
   body('user_id').notEmpty(),
   body('answer_id').notEmpty(),
@@ -163,7 +163,7 @@ router.patch('/:questionId/:packageQuestionId', [
   }
 });
 
-/* DELETE One by ID */
+/* by id */
 router.delete('/:id', async (req, res) => {
   try {
     const data = await Records.findOne({

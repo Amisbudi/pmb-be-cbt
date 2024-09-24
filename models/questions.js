@@ -19,6 +19,7 @@ module.exports = (sequelize, DataTypes) => {
   Questions.init({
     package_question_id: DataTypes.BIGINT,
     name: DataTypes.TEXT,
+    image: DataTypes.BLOB('medium'),
     status: DataTypes.BOOLEAN
   }, {
     sequelize,

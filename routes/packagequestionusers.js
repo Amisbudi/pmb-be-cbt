@@ -3,7 +3,7 @@ const router = express.Router();
 const { body, validationResult } = require('express-validator');
 const { PackageQuestionUsers, PackageQuestions, Types } = require('../models');
 
-/* GET All */
+/* package question users */
 router.get('/', async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
@@ -43,7 +43,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-/* GET by User ID */
+/* package question user by user id */
 router.get('/user/:userId', async (req, res) => {
   try {
     const data = await PackageQuestionUsers.findAll({
@@ -124,7 +124,7 @@ router.patch('/:id', [
     if (!data) {
       return res.status(404).json({ message: 'Package question user not found' });
     }
-    await PackageQuestions.update({
+    await PackageQuestionUsers.update({
       package_question_id: req.body.package_question_id,
       user_id: req.body.user_id,
       classes: req.body.classes,
@@ -137,6 +137,7 @@ router.patch('/:id', [
         id: req.params.id
       }
     });
+
     return res.json({
       message: 'Package question user has been updated.'
     });

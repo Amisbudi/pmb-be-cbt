@@ -3,7 +3,7 @@ const router = express.Router();
 const { body, validationResult } = require('express-validator');
 const { Types, Categories } = require('../models');
 
-/* GET All */
+/* types */
 router.get('/', async (req, res) => {
   try {
     const data = await Types.findAll();
@@ -15,7 +15,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-/* GET One by ID */
+/* by id */
 router.get('/:id', async (req, res) => {
   try {
     const data = await Types.findOne({
@@ -34,7 +34,7 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-/* POST */
+/* type */
 router.post('/', [
   body('category_id').notEmpty(),
   body('name').notEmpty(),

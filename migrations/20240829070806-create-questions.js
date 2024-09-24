@@ -15,6 +15,10 @@ module.exports = {
       name: {
         type: Sequelize.STRING
       },
+      image: {
+        allowNull: true,
+        type: Sequelize.BLOB('medium'),
+      },
       status: {
         type: Sequelize.BOOLEAN,
         defaultValue: true,

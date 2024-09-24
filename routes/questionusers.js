@@ -3,7 +3,7 @@ const router = express.Router();
 const { body, validationResult } = require('express-validator');
 const { QuestionUsers, PackageQuestions, PackageQuestionUsers, Questions, ViewQuestionUsers, Records } = require('../models');
 
-/* GET All */
+/* question users */
 router.get('/', async (req, res) => {
   try {
     const data = await QuestionUsers.findAll({
@@ -29,6 +29,7 @@ router.get('/', async (req, res) => {
   }
 });
 
+/* result for answers */
 router.get(`/results`, async(req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
@@ -60,7 +61,7 @@ router.get(`/results`, async(req, res) => {
   }
 });
 
-/* GET One by ID */
+/* question by question number & package question */
 router.get('/:questionNumber/:packageQuestion', async (req, res) => {
   try {
     const data = await QuestionUsers.findOne({
@@ -93,7 +94,7 @@ router.get('/:questionNumber/:packageQuestion', async (req, res) => {
   }
 });
 
-/* GET Questions By PackageQuestionID & UserID */
+/* question users by package question & user id */
 router.get('/questions/:packageQuestionId/:userId', async (req, res) => {
   try {
     const data = await QuestionUsers.findAll({
@@ -126,7 +127,7 @@ router.get('/questions/:packageQuestionId/:userId', async (req, res) => {
   }
 });
 
-/* GET packagequestion By PackageQuestionID & UserID */
+/* question user by package question id & user id */
 router.get('/packagequestion/:packageQuestionId/:userId', async (req, res) => {
   try {
     const data = await QuestionUsers.findAll({
@@ -211,7 +212,7 @@ router.post('/', [
   }
 });
 
-/* DELETE by PackageQUestionID */
+/* question users by package question */
 router.delete('/:packageQuestionId', async (req, res) => {
   try {
     const data = await QuestionUsers.findOne({
@@ -237,7 +238,7 @@ router.delete('/:packageQuestionId', async (req, res) => {
   }
 });
 
-/* DELETE One by ID */
+/* question user result by package & user id */
 router.delete('/results/:packageQuestionId/:userId', async (req, res) => {
   try {
     const data = await QuestionUsers.findOne({

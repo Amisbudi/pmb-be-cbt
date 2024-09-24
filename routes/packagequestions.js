@@ -3,7 +3,7 @@ const router = express.Router();
 const { body, validationResult } = require('express-validator');
 const { PackageQuestions, Types } = require('../models');
 
-/* GET All */
+/* package questions */
 router.get('/', async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
@@ -37,7 +37,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-/* GET One by ID */
+/* package question by id */
 router.get('/:id', async (req, res) => {
   try {
     const data = await PackageQuestions.findOne({

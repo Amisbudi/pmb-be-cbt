@@ -3,7 +3,7 @@ const router = express.Router();
 const { body, validationResult } = require('express-validator');
 const { Questions, PackageQuestions, Answers } = require('../models');
 
-/* GET All */
+/* questions */
 router.get('/', async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
@@ -36,7 +36,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-/* GET One by ID */
+/* question by id */
 router.get('/:id', async (req, res) => {
   try {
     const data = await Questions.findOne({
@@ -55,7 +55,30 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-/* GET by packageQuestionID */
+/* question image by id */
+router.get('/image/:id', async (req, res) => {
+  try {
+    const data = await Questions.findOne({
+      where: {
+        id: req.params.id
+      }
+    });
+    if (!data) {
+      return res.status(404).json({ message: 'Question not found' });
+    }
+    if (!data.image) {
+      return res.status(404).json({ message: 'No image found for this record' });
+    }
+    res.set('Content-Type', 'image/jpeg');
+    res.send(data.image);
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message
+    });
+  }
+});
+
+/* question by package question id */
 router.get('/packagequestion/:id', async (req, res) => {
   try {
     const data = await Questions.findAll({
@@ -74,7 +97,7 @@ router.get('/packagequestion/:id', async (req, res) => {
   }
 });
 
-/* POST */
+/* question & answers */
 router.post('/', [
   body('package_question_id').notEmpty(),
   body('name').notEmpty(),
@@ -92,11 +115,24 @@ router.post('/', [
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    const question = await Questions.create({
-      package_question_id: req.body.package_question_id,
-      name: req.body.name,
-      status: true
-    });
+    let question;
+    if (req.body.image) {
+      const base64Image = req.body.image;
+      const base64Data = base64Image.replace(/^data:image\/\w+;base64,/, '');
+      const bufferData = Buffer.from(base64Data, 'base64');
+      question = await Questions.create({
+        package_question_id: req.body.package_question_id,
+        name: req.body.name,
+        image: bufferData,
+        status: true
+      });
+    } else {
+      question = await Questions.create({
+        package_question_id: req.body.package_question_id,
+        name: req.body.name,
+        status: true
+      });
+    }
     await Answers.create({
       question_id: question.id,
       name: req.body.answer_1,
@@ -127,7 +163,7 @@ router.post('/', [
   }
 });
 
-/* PATCH */
+/* question & answers */
 router.patch('/:id', [
   body('package_question_id').notEmpty(),
   body('name').notEmpty(),
@@ -158,15 +194,71 @@ router.patch('/:id', [
       return res.status(404).json({ message: 'Question not found' });
     }
 
-    await Questions.update({
-      package_question_id: req.body.package_question_id,
-      name: req.body.name,
-      status: req.body.status
-    }, {
-      where: {
-        id: req.params.id
+    if (req.body.image) {
+      if (req.body.image.type === 'Buffer') {
+        await Questions.update({
+          package_question_id: req.body.package_question_id,
+          name: req.body.name,
+          status: req.body.status
+        }, {
+          where: {
+            id: req.params.id
+          }
+        });
+      } else {
+        const base64Image = req.body.image;
+        const base64Data = base64Image.replace(/^data:image\/\w+;base64,/, '');
+        const bufferData = Buffer.from(base64Data, 'base64');
+        await Questions.update({
+          package_question_id: req.body.package_question_id,
+          name: req.body.name,
+          image: bufferData,
+          status: req.body.status
+        }, {
+          where: {
+            id: req.params.id
+          }
+        });
       }
-    });
+    } else {
+      await Questions.update({
+        package_question_id: req.body.package_question_id,
+        name: req.body.name,
+        status: req.body.status
+      }, {
+        where: {
+          id: req.params.id
+        }
+      });
+      return res.json({
+        message: 'terubah tanpa gambar'
+      });
+    }
+    // if (req.body.image) {
+    // await Questions.update({
+    //   package_question_id: req.body.package_question_id,
+    //   name: req.body.name,
+    //   status: req.body.status
+    // }, {
+    //   where: {
+    //     id: req.params.id
+    //   }
+    // });
+    // } else {
+    // const base64Image = req.body.image;
+    // const base64Data = base64Image.replace(/^data:image\/\w+;base64,/, '');
+    // const bufferData = Buffer.from(base64Data, 'base64');
+    // await Questions.update({
+    //   package_question_id: req.body.package_question_id,
+    //   name: req.body.name,
+    //   image: bufferData,
+    //   status: req.body.status
+    // }, {
+    //   where: {
+    //     id: req.params.id
+    //   }
+    // });
+    // }
 
     await Answers.update({
       name: req.body.answer_1,
@@ -217,7 +309,7 @@ router.patch('/:id', [
   }
 });
 
-/* DELETE One by ID */
+/* answer by id */
 router.delete('/:id', async (req, res) => {
   try {
     const data = await Questions.findOne({
@@ -231,6 +323,11 @@ router.delete('/:id', async (req, res) => {
     await Questions.destroy({
       where: {
         id: req.params.id
+      }
+    });
+    await Answers.destroy({
+      where: {
+        question_id: req.params.id
       }
     });
     return res.json({
