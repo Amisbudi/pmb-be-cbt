@@ -174,6 +174,13 @@ router.post('/import', [
       return res.status(400).json({ errors: errors.array() });
     }
     const base64Excel = req.body.excel;
+
+    const imageSizeInBytes = Buffer.from(base64Excel.replace(/^data:application\/vnd\.openxmlformats-officedocument\.spreadsheetml\.sheet;base64,/, ''), 'base64').length;
+    const maxSizeInBytes = 1 * 1024 * 1024;
+    if (imageSizeInBytes > maxSizeInBytes) {
+      return res.status(400).json({ message: 'File size max 1MB.' });
+    }
+
     const base64Data = base64Excel.replace(/^data:application\/vnd\.openxmlformats-officedocument\.spreadsheetml\.sheet;base64,/, '');
     const bufferData = Buffer.from(base64Data, 'base64');
     const workbook = XLSX.read(bufferData, { type: 'buffer' });
@@ -264,6 +271,13 @@ router.patch('/:id', [
         });
       } else {
         const base64Image = req.body.image;
+
+        const imageSizeInBytes = Buffer.from(base64Image.replace(/^data:image\/\w+;base64,/, ''), 'base64').length;
+        const maxSizeInBytes = 1 * 1024 * 1024;
+        if (imageSizeInBytes > maxSizeInBytes) {
+          return res.status(400).json({ message: 'File size max 1MB.' });
+        }
+
         const base64Data = base64Image.replace(/^data:image\/\w+;base64,/, '');
         const bufferData = Buffer.from(base64Data, 'base64');
         await Questions.update({
