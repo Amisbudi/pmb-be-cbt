@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const XLSX = require('xlsx');
 const { body, validationResult } = require('express-validator');
 const { Questions, PackageQuestions, Answers } = require('../models');
 
@@ -164,6 +165,62 @@ router.post('/', [
 });
 
 /* question & answers */
+router.post('/import', [
+  body('package_question_id').notEmpty(),
+], async (req, res) => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+    const base64Excel = req.body.excel;
+    const base64Data = base64Excel.replace(/^data:application\/vnd\.openxmlformats-officedocument\.spreadsheetml\.sheet;base64,/, '');
+    const bufferData = Buffer.from(base64Data, 'base64');
+    const workbook = XLSX.read(bufferData, { type: 'buffer' });
+    const sheetName = workbook.SheetNames[0];
+    const worksheet = workbook.Sheets[sheetName];
+    const questions = XLSX.utils.sheet_to_json(worksheet);
+    for (let i = 0; i < questions.length; i++) {
+      let question = await Questions.create({
+        package_question_id: req.body.package_question_id,
+        name: questions[i].question,
+        status: true
+      });
+      await Answers.create({
+        question_id: question.id,
+        name: questions[i].answer_1,
+        is_right: questions[i].answer_1_status,
+      });
+
+      await Answers.create({
+        question_id: question.id,
+        name: questions[i].answer_2,
+        is_right: questions[i].answer_2_status,
+      });
+
+      await Answers.create({
+        question_id: question.id,
+        name: questions[i].answer_3,
+        is_right: questions[i].answer_3_status,
+      });
+
+      await Answers.create({
+        question_id: question.id,
+        name: questions[i].answer_4,
+        is_right: questions[i].answer_4_status,
+      });
+    }
+    return res.json({
+      message: 'Question import has been succesfully.'
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message
+    });
+  }
+});
+
+/* question & answers */
 router.patch('/:id', [
   body('package_question_id').notEmpty(),
   body('name').notEmpty(),
@@ -230,35 +287,7 @@ router.patch('/:id', [
           id: req.params.id
         }
       });
-      return res.json({
-        message: 'terubah tanpa gambar'
-      });
     }
-    // if (req.body.image) {
-    // await Questions.update({
-    //   package_question_id: req.body.package_question_id,
-    //   name: req.body.name,
-    //   status: req.body.status
-    // }, {
-    //   where: {
-    //     id: req.params.id
-    //   }
-    // });
-    // } else {
-    // const base64Image = req.body.image;
-    // const base64Data = base64Image.replace(/^data:image\/\w+;base64,/, '');
-    // const bufferData = Buffer.from(base64Data, 'base64');
-    // await Questions.update({
-    //   package_question_id: req.body.package_question_id,
-    //   name: req.body.name,
-    //   image: bufferData,
-    //   status: req.body.status
-    // }, {
-    //   where: {
-    //     id: req.params.id
-    //   }
-    // });
-    // }
 
     await Answers.update({
       name: req.body.answer_1,
