@@ -34,7 +34,40 @@ Sebagai contoh, jika Anda memetakan port `3000`, buka browser dan akses alamat b
 http://localhost:3000
 ```
 
-### 4. Menghentikan Aplikasi
+### 3. Mengubah Database di Config.js
+
+Ubah konfigurasi database di file `config.js` sesuai dengan pengaturan environment Anda. Sebagai contoh, jika Anda menggunakan PostgreSQL untuk pengembangan, konfigurasinya bisa seperti ini:
+
+```js
+"development": {
+    "username": "dev",
+    "password": "",
+    "database": "cat_db",
+    "host": "localhost",
+    "dialect": "postgres",
+    "port": 5432
+  },
+```
+
+Pastikan untuk menyesuaikan `username`, `password`, dan detail lainnya sesuai dengan environment yang digunakan.
+
+### 4. Jalankan Migration dan Seeder jika diperlukan
+
+Setelah konfigurasi selesai, jalankan migration untuk membuat tabel di database:
+
+```bash
+npx sequelize-cli db:migrate
+```
+
+Jika Anda juga memiliki data awal yang perlu diisikan, gunakan seeder dengan perintah berikut:
+
+```bash
+npx sequelize-cli db:seed:all
+```
+
+Ini akan menjalankan semua seeder yang sudah dibuat.
+
+### 5. Menghentikan Aplikasi
 
 Untuk menghentikan kontainer yang berjalan, gunakan perintah berikut:
 
