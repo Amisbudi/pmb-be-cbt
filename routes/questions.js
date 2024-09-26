@@ -134,26 +134,79 @@ router.post('/', [
         status: true
       });
     }
-    await Answers.create({
-      question_id: question.id,
-      name: req.body.answer_1,
-      is_right: req.body.answer_1_status,
-    });
-    await Answers.create({
-      question_id: question.id,
-      name: req.body.answer_2,
-      is_right: req.body.answer_2_status,
-    });
-    await Answers.create({
-      question_id: question.id,
-      name: req.body.answer_3,
-      is_right: req.body.answer_3_status,
-    });
-    await Answers.create({
-      question_id: question.id,
-      name: req.body.answer_4,
-      is_right: req.body.answer_4_status,
-    });
+
+    if (req.body.answer_1_image) {
+      const base64Image = req.body.answer_1_image;
+      const base64Data = base64Image.replace(/^data:image\/\w+;base64,/, '');
+      const bufferData = Buffer.from(base64Data, 'base64');
+      await Answers.create({
+        question_id: question.id,
+        name: req.body.answer_1,
+        image: bufferData,
+        is_right: req.body.answer_1_status,
+      });
+    } else {
+      await Answers.create({
+        question_id: question.id,
+        name: req.body.answer_1,
+        is_right: req.body.answer_1_status,
+      });
+    }
+
+    if (req.body.answer_2_image) {
+      const base64Image = req.body.answer_2_image;
+      const base64Data = base64Image.replace(/^data:image\/\w+;base64,/, '');
+      const bufferData = Buffer.from(base64Data, 'base64');
+      await Answers.create({
+        question_id: question.id,
+        name: req.body.answer_2,
+        image: bufferData,
+        is_right: req.body.answer_2_status,
+      });
+    } else {
+      await Answers.create({
+        question_id: question.id,
+        name: req.body.answer_2,
+        is_right: req.body.answer_2_status,
+      });
+    }
+
+    if (req.body.answer_3_image) {
+      const base64Image = req.body.answer_3_image;
+      const base64Data = base64Image.replace(/^data:image\/\w+;base64,/, '');
+      const bufferData = Buffer.from(base64Data, 'base64');
+      await Answers.create({
+        question_id: question.id,
+        name: req.body.answer_3,
+        image: bufferData,
+        is_right: req.body.answer_3_status,
+      });
+    } else {
+      await Answers.create({
+        question_id: question.id,
+        name: req.body.answer_3,
+        is_right: req.body.answer_3_status,
+      });
+    }
+
+    if (req.body.answer_4_image) {
+      const base64Image = req.body.answer_4_image;
+      const base64Data = base64Image.replace(/^data:image\/\w+;base64,/, '');
+      const bufferData = Buffer.from(base64Data, 'base64');
+      await Answers.create({
+        question_id: question.id,
+        name: req.body.answer_4,
+        image: bufferData,
+        is_right: req.body.answer_4_status,
+      });
+    } else {
+      await Answers.create({
+        question_id: question.id,
+        name: req.body.answer_4,
+        is_right: req.body.answer_4_status,
+      });
+    }
+
     return res.json({
       message: 'Question has been created.'
     });
@@ -303,45 +356,178 @@ router.patch('/:id', [
       });
     }
 
-    await Answers.update({
-      name: req.body.answer_1,
-      is_right: req.body.answer_1_status
-    }, {
-      where: {
-        id: req.body.answer_1_id,
-        question_id: req.params.id,
+    if (req.body.answer_1_image) {
+      if (req.body.answer_1_image.type === 'Buffer') {
+        await Answers.update({
+          name: req.body.answer_1,
+          is_right: req.body.answer_1_status
+        }, {
+          where: {
+            id: req.body.answer_1_id,
+            question_id: req.params.id,
+          }
+        });
+      } else {
+        const base64Image = req.body.answer_1_image;
+        const imageSizeInBytes = Buffer.from(base64Image.replace(/^data:image\/\w+;base64,/, ''), 'base64').length;
+        const maxSizeInBytes = 1 * 1024 * 1024;
+        if (imageSizeInBytes > maxSizeInBytes) {
+          return res.status(400).json({ message: 'File size max 1MB.' });
+        }
+        const base64Data = base64Image.replace(/^data:image\/\w+;base64,/, '');
+        const bufferData = Buffer.from(base64Data, 'base64');
+        await Answers.update({
+          name: req.body.answer_1,
+          image: bufferData,
+          is_right: req.body.answer_1_status
+        }, {
+          where: {
+            id: req.body.answer_1_id,
+            question_id: req.params.id,
+          }
+        });
       }
-    });
+    } else {
+      await Answers.update({
+        name: req.body.answer_1,
+        is_right: req.body.answer_1_status
+      }, {
+        where: {
+          id: req.body.answer_1_id,
+          question_id: req.params.id,
+        }
+      });
+    }
 
-    await Answers.update({
-      name: req.body.answer_2,
-      is_right: req.body.answer_2_status
-    }, {
-      where: {
-        id: req.body.answer_2_id,
-        question_id: req.params.id,
+    if (req.body.answer_2_image) {
+      if (req.body.answer_2_image.type === 'Buffer') {
+        await Answers.update({
+          name: req.body.answer_2,
+          is_right: req.body.answer_2_status
+        }, {
+          where: {
+            id: req.body.answer_2_id,
+            question_id: req.params.id,
+          }
+        });
+      } else {
+        const base64Image = req.body.answer_2_image;
+        const imageSizeInBytes = Buffer.from(base64Image.replace(/^data:image\/\w+;base64,/, ''), 'base64').length;
+        const maxSizeInBytes = 1 * 1024 * 1024;
+        if (imageSizeInBytes > maxSizeInBytes) {
+          return res.status(400).json({ message: 'File size max 1MB.' });
+        }
+        const base64Data = base64Image.replace(/^data:image\/\w+;base64,/, '');
+        const bufferData = Buffer.from(base64Data, 'base64');
+        await Answers.update({
+          name: req.body.answer_2,
+          image: bufferData,
+          is_right: req.body.answer_2_status
+        }, {
+          where: {
+            id: req.body.answer_2_id,
+            question_id: req.params.id,
+          }
+        });
       }
-    });
+    } else {
+      await Answers.update({
+        name: req.body.answer_2,
+        is_right: req.body.answer_2_status
+      }, {
+        where: {
+          id: req.body.answer_2_id,
+          question_id: req.params.id,
+        }
+      });
+    }
 
-    await Answers.update({
-      name: req.body.answer_3,
-      is_right: req.body.answer_3_status
-    }, {
-      where: {
-        id: req.body.answer_3_id,
-        question_id: req.params.id,
+    if (req.body.answer_3_image) {
+      if (req.body.answer_3_image.type === 'Buffer') {
+        await Answers.update({
+          name: req.body.answer_3,
+          is_right: req.body.answer_3_status
+        }, {
+          where: {
+            id: req.body.answer_3_id,
+            question_id: req.params.id,
+          }
+        });
+      } else {
+        const base64Image = req.body.answer_3_image;
+        const imageSizeInBytes = Buffer.from(base64Image.replace(/^data:image\/\w+;base64,/, ''), 'base64').length;
+        const maxSizeInBytes = 1 * 1024 * 1024;
+        if (imageSizeInBytes > maxSizeInBytes) {
+          return res.status(400).json({ message: 'File size max 1MB.' });
+        }
+        const base64Data = base64Image.replace(/^data:image\/\w+;base64,/, '');
+        const bufferData = Buffer.from(base64Data, 'base64');
+        await Answers.update({
+          name: req.body.answer_3,
+          image: bufferData,
+          is_right: req.body.answer_3_status
+        }, {
+          where: {
+            id: req.body.answer_3_id,
+            question_id: req.params.id,
+          }
+        });
       }
-    });
+    } else {
+      await Answers.update({
+        name: req.body.answer_3,
+        is_right: req.body.answer_3_status
+      }, {
+        where: {
+          id: req.body.answer_3_id,
+          question_id: req.params.id,
+        }
+      });
+    }
 
-    await Answers.update({
-      name: req.body.answer_4,
-      is_right: req.body.answer_4_status
-    }, {
-      where: {
-        id: req.body.answer_4_id,
-        question_id: req.params.id,
+    if (req.body.answer_4_image) {
+      if (req.body.answer_4_image.type === 'Buffer') {
+        await Answers.update({
+          name: req.body.answer_4,
+          is_right: req.body.answer_4_status
+        }, {
+          where: {
+            id: req.body.answer_4_id,
+            question_id: req.params.id,
+          }
+        });
+      } else {
+        const base64Image = req.body.answer_4_image;
+        const imageSizeInBytes = Buffer.from(base64Image.replace(/^data:image\/\w+;base64,/, ''), 'base64').length;
+        const maxSizeInBytes = 1 * 1024 * 1024;
+        if (imageSizeInBytes > maxSizeInBytes) {
+          return res.status(400).json({ message: 'File size max 1MB.' });
+        }
+        const base64Data = base64Image.replace(/^data:image\/\w+;base64,/, '');
+        const bufferData = Buffer.from(base64Data, 'base64');
+        await Answers.update({
+          name: req.body.answer_4,
+          image: bufferData,
+          is_right: req.body.answer_4_status
+        }, {
+          where: {
+            id: req.body.answer_4_id,
+            question_id: req.params.id,
+          }
+        });
       }
-    });
+    } else {
+      await Answers.update({
+        name: req.body.answer_4,
+        is_right: req.body.answer_4_status
+      }, {
+        where: {
+          id: req.body.answer_4_id,
+          question_id: req.params.id,
+        }
+      });
+    }
+
     return res.json({
       message: 'Question has been updated.'
     });

@@ -15,6 +15,10 @@ module.exports = {
       name: {
         type: Sequelize.TEXT
       },
+      image: {
+        allowNull: true,
+        type: Sequelize.BLOB('medium'),
+      },
       is_right: {
         type: Sequelize.BOOLEAN,
         defaultValue: false,

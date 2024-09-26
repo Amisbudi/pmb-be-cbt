@@ -17,6 +17,7 @@ module.exports = (sequelize, DataTypes) => {
   Answers.init({
     question_id: DataTypes.BIGINT,
     name: DataTypes.TEXT,
+    image: DataTypes.BLOB('medium'),
     is_right: DataTypes.BOOLEAN
   }, {
     sequelize,
