@@ -1,18 +1,18 @@
 {
   "development": {
+    "username": "amisbud1_trisaksi",
+    "password": "Trisakti",
+    "database": "amisbud1_cat_db",
+    "host": "andria-db.id.domainesia.com",
+    "dialect": "mysql"
+  },
+  "test": {
     "username": "dev",
     "password": "",
     "database": "cat_db",
     "host": "localhost",
     "dialect": "postgres",
     "port": 5432
-  },
-  "test": {
-    "username": "amisbud1_trisaksi",
-    "password": "Trisakti",
-    "database": "amisbud1_cat_db",
-    "host": "andria-db.id.domainesia.com",
-    "dialect": "mysql"
   },
   "production": {
     "username": "root",
