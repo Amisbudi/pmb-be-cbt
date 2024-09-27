@@ -36,9 +36,7 @@ router.get('/:id', async (req, res) => {
 
 /* type */
 router.post('/', [
-  body('category_id').notEmpty(),
   body('name').notEmpty(),
-  body('passing_grade').notEmpty(),
 ], async (req, res) => {
   try {
     const errors = validationResult(req);
@@ -58,9 +56,7 @@ router.post('/', [
 
 /* PATCH */
 router.patch('/:id', [
-  body('category_id').notEmpty(),
   body('name').notEmpty(),
-  body('passing_grade').notEmpty(),
 ], async (req, res) => {
   try {
     const errors = validationResult(req);

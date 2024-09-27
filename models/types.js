@@ -14,14 +14,14 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Types.init({
-    category_id: DataTypes.BIGINT,
     name: DataTypes.STRING,
-    passing_grade: DataTypes.FLOAT,
-    status: DataTypes.BOOLEAN
+    active_status: DataTypes.BOOLEAN,
+    created_by: DataTypes.STRING(30),
+    updated_by: DataTypes.STRING(30),
   }, {
     sequelize,
     modelName: 'Types',
-    tableName: 'cbt_types',
+    tableName: 'exam_type',
     underscored: true,
   });
   return Types;
