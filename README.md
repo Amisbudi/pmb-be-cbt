@@ -31,7 +31,7 @@ Setelah kontainer berjalan, aplikasi React Anda dapat diakses melalui port yang 
 Sebagai contoh, jika Anda memetakan port `3000`, buka browser dan akses alamat berikut:
 
 ```bash
-https://sbpmb-express.amisbudi.cloud
+http://10.50.1.149:3000
 ```
 
 ### 3. Mengubah Database di Config.js
