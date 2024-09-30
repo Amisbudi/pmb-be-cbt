@@ -1,9 +1,10 @@
 const express = require('express');
 const router = express.Router();
+const verifyapikey = require('../middleware/verifyapitoken');
 const { Answers, Questions } = require('../models');
 
 /* answers */
-router.get('/', async (req, res) => {
+router.get('/', verifyapikey, async (req, res) => {
   try {
     const data = await Answers.findAll();
     return res.json(data);
@@ -15,7 +16,7 @@ router.get('/', async (req, res) => {
 });
 
 /* answer image by id */
-router.get('/image/:id', async (req, res) => {
+router.get('/image/:id', verifyapikey, async (req, res) => {
   try {
     const data = await Answers.findOne({
       where: {
@@ -38,7 +39,7 @@ router.get('/image/:id', async (req, res) => {
 });
 
 /* answer by id */
-router.get('/:id', async (req, res) => {
+router.get('/:id', verifyapikey, async (req, res) => {
   try {
     const data = await Answers.findOne({
       where: {
@@ -63,7 +64,7 @@ router.get('/:id', async (req, res) => {
 });
 
 /* answer by question_id */
-router.get('/question/:questionId', async (req, res) => {
+router.get('/question/:questionId', verifyapikey, async (req, res) => {
   try {
     const data = await Answers.findAll({
       where: {

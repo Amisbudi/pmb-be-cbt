@@ -1,11 +1,12 @@
 const express = require('express');
 const router = express.Router();
+const verifyapikey = require('../middleware/verifyapitoken');
 const XLSX = require('xlsx');
 const { body, validationResult } = require('express-validator');
 const { Questions, PackageQuestions, Answers } = require('../models');
 
 /* questions */
-router.get('/', async (req, res) => {
+router.get('/', verifyapikey, async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 5;
@@ -38,7 +39,7 @@ router.get('/', async (req, res) => {
 });
 
 /* question by id */
-router.get('/:id', async (req, res) => {
+router.get('/:id', verifyapikey, async (req, res) => {
   try {
     const data = await Questions.findOne({
       where: {
@@ -57,7 +58,7 @@ router.get('/:id', async (req, res) => {
 });
 
 /* question image by id */
-router.get('/image/:id', async (req, res) => {
+router.get('/image/:id', verifyapikey, async (req, res) => {
   try {
     const data = await Questions.findOne({
       where: {
@@ -80,7 +81,7 @@ router.get('/image/:id', async (req, res) => {
 });
 
 /* question by package question id */
-router.get('/packagequestion/:id', async (req, res) => {
+router.get('/packagequestion/:id', verifyapikey, async (req, res) => {
   try {
     const data = await Questions.findAll({
       where: {
@@ -99,7 +100,7 @@ router.get('/packagequestion/:id', async (req, res) => {
 });
 
 /* question & answers */
-router.post('/', [
+router.post('/', verifyapikey, [
   body('package_question_id').notEmpty(),
   body('name').notEmpty(),
   body('answer_1').notEmpty(),
@@ -218,7 +219,7 @@ router.post('/', [
 });
 
 /* question & answers */
-router.post('/import', [
+router.post('/import', verifyapikey, [
   body('package_question_id').notEmpty(),
 ], async (req, res) => {
   try {
@@ -281,7 +282,7 @@ router.post('/import', [
 });
 
 /* question & answers */
-router.patch('/:id', [
+router.patch('/:id', verifyapikey, [
   body('package_question_id').notEmpty(),
   body('name').notEmpty(),
   body('answer_1').notEmpty(),
@@ -539,7 +540,7 @@ router.patch('/:id', [
 });
 
 /* answer by id */
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', verifyapikey, async (req, res) => {
   try {
     const data = await Questions.findOne({
       where: {

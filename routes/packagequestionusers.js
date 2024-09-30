@@ -1,10 +1,11 @@
 const express = require('express');
 const router = express.Router();
+const verifyapikey = require('../middleware/verifyapitoken');
 const { body, validationResult } = require('express-validator');
 const { PackageQuestionUsers, PackageQuestions, Types } = require('../models');
 
 /* package question users */
-router.get('/', async (req, res) => {
+router.get('/', verifyapikey, async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 5;
@@ -44,7 +45,7 @@ router.get('/', async (req, res) => {
 });
 
 /* package question user by user id */
-router.get('/user/:userId', async (req, res) => {
+router.get('/user/:userId', verifyapikey, async (req, res) => {
   try {
     const data = await PackageQuestionUsers.findAll({
       where: {
@@ -75,7 +76,7 @@ router.get('/user/:userId', async (req, res) => {
 });
 
 /* POST */
-router.post('/', [
+router.post('/', verifyapikey, [
   body('package_question_id').notEmpty(),
   body('user_id').notEmpty(),
   body('classes').notEmpty(),
@@ -105,7 +106,7 @@ router.post('/', [
 });
 
 /* PATCH */
-router.patch('/:id', [
+router.patch('/:id', verifyapikey, [
   body('package_question_id').notEmpty(),
   body('user_id').notEmpty(),
   body('classes').notEmpty(),
@@ -149,7 +150,7 @@ router.patch('/:id', [
 });
 
 /* DELETE One by ID */
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', verifyapikey, async (req, res) => {
   try {
     const data = await PackageQuestionUsers.findOne({
       where: {

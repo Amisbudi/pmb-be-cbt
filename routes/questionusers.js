@@ -1,10 +1,11 @@
 const express = require('express');
 const router = express.Router();
+const verifyapikey = require('../middleware/verifyapitoken');
 const { body, validationResult } = require('express-validator');
 const { QuestionUsers, PackageQuestions, PackageQuestionUsers, Questions, ViewQuestionUsers, Records } = require('../models');
 
 /* question users */
-router.get('/', async (req, res) => {
+router.get('/', verifyapikey, async (req, res) => {
   try {
     const data = await QuestionUsers.findAll({
       include: [
@@ -30,7 +31,7 @@ router.get('/', async (req, res) => {
 });
 
 /* result for answers */
-router.get(`/results`, async(req, res) => {
+router.get(`/results`, verifyapikey, async(req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 5;
@@ -62,7 +63,7 @@ router.get(`/results`, async(req, res) => {
 });
 
 /* question by question number & package question */
-router.get('/:questionNumber/:packageQuestion', async (req, res) => {
+router.get('/:questionNumber/:packageQuestion', verifyapikey, async (req, res) => {
   try {
     const data = await QuestionUsers.findOne({
       where: {
@@ -95,7 +96,7 @@ router.get('/:questionNumber/:packageQuestion', async (req, res) => {
 });
 
 /* question users by package question & user id */
-router.get('/questions/:packageQuestionId/:userId', async (req, res) => {
+router.get('/questions/:packageQuestionId/:userId', verifyapikey, async (req, res) => {
   try {
     const data = await QuestionUsers.findAll({
       where: {
@@ -128,7 +129,7 @@ router.get('/questions/:packageQuestionId/:userId', async (req, res) => {
 });
 
 /* question user by package question id & user id */
-router.get('/packagequestion/:packageQuestionId/:userId', async (req, res) => {
+router.get('/packagequestion/:packageQuestionId/:userId', verifyapikey, async (req, res) => {
   try {
     const data = await QuestionUsers.findAll({
       where: {
@@ -161,7 +162,7 @@ router.get('/packagequestion/:packageQuestionId/:userId', async (req, res) => {
 });
 
 /* POST */
-router.post('/', [
+router.post('/', verifyapikey, [
   body('package_question_id').notEmpty(),
   body('user_id').notEmpty(),
 ], async (req, res) => {
@@ -213,7 +214,7 @@ router.post('/', [
 });
 
 /* question users by package question */
-router.delete('/:packageQuestionId', async (req, res) => {
+router.delete('/:packageQuestionId', verifyapikey, async (req, res) => {
   try {
     const data = await QuestionUsers.findOne({
       where: {
@@ -239,7 +240,7 @@ router.delete('/:packageQuestionId', async (req, res) => {
 });
 
 /* question user result by package & user id */
-router.delete('/results/:packageQuestionId/:userId', async (req, res) => {
+router.delete('/results/:packageQuestionId/:userId', verifyapikey, async (req, res) => {
   try {
     const data = await QuestionUsers.findOne({
       where: {

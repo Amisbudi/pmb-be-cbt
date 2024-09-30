@@ -1,10 +1,11 @@
 const express = require('express');
 const router = express.Router();
+const verifyapikey = require('../middleware/verifyapitoken');
 const { body, validationResult } = require('express-validator');
 const { PackageQuestions, Types } = require('../models');
 
 /* package questions */
-router.get('/', async (req, res) => {
+router.get('/', verifyapikey, async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 5;
@@ -38,7 +39,7 @@ router.get('/', async (req, res) => {
 });
 
 /* package question by id */
-router.get('/:id', async (req, res) => {
+router.get('/:id', verifyapikey, async (req, res) => {
   try {
     const data = await PackageQuestions.findOne({
       where: {
@@ -57,7 +58,7 @@ router.get('/:id', async (req, res) => {
 });
 
 /* POST */
-router.post('/', [
+router.post('/', verifyapikey, [
   body('type_id').notEmpty(),
   body('name').notEmpty(),
 ], async (req, res) => {
@@ -81,7 +82,7 @@ router.post('/', [
 });
 
 /* PATCH */
-router.patch('/:id', [
+router.patch('/:id', verifyapikey, [
   body('type_id').notEmpty(),
   body('name').notEmpty(),
 ], async (req, res) => {
@@ -118,7 +119,7 @@ router.patch('/:id', [
 });
 
 /* DELETE One by ID */
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', verifyapikey, async (req, res) => {
   try {
     const data = await PackageQuestions.findOne({
       where: {

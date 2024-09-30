@@ -1,10 +1,11 @@
 const express = require('express');
 const router = express.Router();
+const verifyapikey = require('../middleware/verifyapitoken');
 const { body, validationResult } = require('express-validator');
 const { Records, Answers, Questions, QuestionUsers, PackageQuestions } = require('../models');
 
 /* records */
-router.get('/', async (req, res) => {
+router.get('/', verifyapikey, async (req, res) => {
   try {
     const data = await Records.findAll({
       include: [
@@ -31,7 +32,7 @@ router.get('/', async (req, res) => {
 });
 
 /* record by id */
-router.get('/:id', async (req, res) => {
+router.get('/:id', verifyapikey, async (req, res) => {
   try {
     const data = await Records.findOne({
       where: {
@@ -56,7 +57,7 @@ router.get('/:id', async (req, res) => {
 });
 
 /* question by question id & package question */
-router.get('/question/:questionId/:packageQuestionId', async (req, res) => {
+router.get('/question/:questionId/:packageQuestionId', verifyapikey, async (req, res) => {
   try {
     const data = await Records.findOne({
       where: {
@@ -82,7 +83,7 @@ router.get('/question/:questionId/:packageQuestionId', async (req, res) => {
 });
 
 /* record */
-router.post('/', [
+router.post('/', verifyapikey, [
   body('question_user_id').notEmpty(),
   body('question_id').notEmpty(),
   body('package_question_id').notEmpty(),
@@ -123,7 +124,7 @@ router.post('/', [
 });
 
 /* record by question id & package question id */
-router.patch('/:questionId/:packageQuestionId', [
+router.patch('/:questionId/:packageQuestionId', verifyapikey, [
   body('user_id').notEmpty(),
   body('answer_id').notEmpty(),
 ], async (req, res) => {
@@ -164,7 +165,7 @@ router.patch('/:questionId/:packageQuestionId', [
 });
 
 /* by id */
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', verifyapikey, async (req, res) => {
   try {
     const data = await Records.findOne({
       where: {
