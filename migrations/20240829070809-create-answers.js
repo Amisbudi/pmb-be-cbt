@@ -17,7 +17,7 @@ module.exports = {
       },
       image: {
         allowNull: true,
-        type: Sequelize.BLOB('medium'),
+        type: Sequelize.BYTEA('medium'),
       },
       is_right: {
         type: Sequelize.BOOLEAN,
