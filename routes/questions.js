@@ -58,7 +58,7 @@ router.get('/:id', verifyapikey, async (req, res) => {
 });
 
 /* question image by id */
-router.get('/image/:id', verifyapikey, async (req, res) => {
+router.get('/image/:id', async (req, res) => {
   try {
     const data = await Questions.findOne({
       where: {
