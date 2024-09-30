@@ -3,7 +3,7 @@
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.sequelize.query(`
-      CREATE VIEW ViewQuestionUsers AS
+      CREATE VIEW viewquestionusers AS
       SELECT
         qu.package_question_id,
         pq.name AS package_name,
