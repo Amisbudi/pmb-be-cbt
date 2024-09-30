@@ -26,7 +26,7 @@ module.exports = {
       },
       photo: {
         allowNull: true,
-        type: Sequelize.BYTEA('medium'),
+        type: Sequelize.BLOB,
       },
       created_at: {
         allowNull: false,
