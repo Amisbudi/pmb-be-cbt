@@ -1,10 +1,11 @@
 const express = require('express');
 const router = express.Router();
+const verifyapikey = require('../middleware/verifyapitoken');
 const { body, validationResult } = require('express-validator');
-const { Types, Categories } = require('../models');
+const { Types } = require('../models');
 
 /* types */
-router.get('/', async (req, res) => {
+router.get('/', verifyapikey, async (req, res) => {
   try {
     const data = await Types.findAll();
     return res.json(data);
@@ -16,7 +17,7 @@ router.get('/', async (req, res) => {
 });
 
 /* by id */
-router.get('/:id', async (req, res) => {
+router.get('/:id', verifyapikey, async (req, res) => {
   try {
     const data = await Types.findOne({
       where: {
@@ -35,7 +36,7 @@ router.get('/:id', async (req, res) => {
 });
 
 /* type */
-router.post('/', [
+router.post('/', verifyapikey, [
   body('name').notEmpty(),
 ], async (req, res) => {
   try {
@@ -55,7 +56,7 @@ router.post('/', [
 });
 
 /* PATCH */
-router.patch('/:id', [
+router.patch('/:id', verifyapikey, [
   body('name').notEmpty(),
 ], async (req, res) => {
   try {
@@ -87,7 +88,7 @@ router.patch('/:id', [
 });
 
 /* DELETE One by ID */
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', verifyapikey, async (req, res) => {
   try {
     const data = await Types.findOne({
       where: {
