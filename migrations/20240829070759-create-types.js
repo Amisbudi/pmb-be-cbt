@@ -1,38 +1,40 @@
-'use strict';
+"use strict";
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('cbt_types', {
+    await queryInterface.createTable("exam_type", {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.BIGINT
-      },
-      category_id: {
-        type: Sequelize.BIGINT
+        type: Sequelize.BIGINT,
       },
       name: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
-      passing_grade: {
-        type: Sequelize.FLOAT
-      },
-      status: {
+      active_status: {
         type: Sequelize.BOOLEAN,
         defaultValue: true,
       },
+      created_by: {
+        allowNull: true,
+        type: Sequelize.STRING,
+      },
+      updated_by: {
+        allowNull: true,
+        type: Sequelize.STRING,
+      },
       created_at: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       updated_at: {
         allowNull: false,
-        type: Sequelize.DATE
-      }
+        type: Sequelize.DATE,
+      },
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('cbt_types');
-  }
+    await queryInterface.dropTable("exam_type");
+  },
 };
