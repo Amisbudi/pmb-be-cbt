@@ -4,17 +4,21 @@
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.bulkInsert(
-      "exam_type",
+      "cbt_types",
       [
         {
+          category_id: 1,
           name: "TPA",
-          active_status: true,
+          passing_grade: 75,
+          status: true,
           created_at: new Date(),
           updated_at: new Date(),
         },
         {
+          category_id: 1,
           name: "English",
-          active_status: true,
+          passing_grade: 75,
+          status: true,
           created_at: new Date(),
           updated_at: new Date(),
         },

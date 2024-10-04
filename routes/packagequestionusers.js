@@ -3,7 +3,6 @@ const router = express.Router();
 const verifyapikey = require("../middleware/verifyapitoken");
 const { body, validationResult } = require("express-validator");
 const { PackageQuestionUsers, PackageQuestions, Types } = require("../models");
-const { Sequelize } = require("sequelize");
 
 /* package question users */
 router.get("/", verifyapikey, async (req, res) => {
@@ -83,7 +82,7 @@ router.post(
   "/",
   verifyapikey,
   [
-    body("type_id").notEmpty(),
+    body("package_question_id").notEmpty(),
     body("user_id").notEmpty(),
     body("classes").notEmpty(),
   ],
@@ -93,29 +92,8 @@ router.post(
       if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
       }
-      const type = await Types.findOne({
-        where: {
-          id: req.body.type_id,
-        },
-      });
-      if (!type) {
-        return res.status(400).json({
-          message: "Exam type not found.",
-        });
-      }
-      const package = await PackageQuestions.findOne({
-        where: {
-          type_id: req.body.type_id,
-        },
-        order: Sequelize.fn("RAND"),
-      });
-      if (!package) {
-        return res.status(400).json({
-          message: "Package question not found.",
-        });
-      }
       await PackageQuestionUsers.create({
-        package_question_id: package.id,
+        package_question_id: req.body.package_question_id,
         user_id: req.body.user_id,
         classes: req.body.classes,
         date_exam: req.body.date_exam,
