@@ -19,6 +19,7 @@ module.exports = (sequelize, DataTypes) => {
     correct_answers: DataTypes.BIGINT,
     incorrect_answers: DataTypes.BIGINT,
     total_questions: DataTypes.BIGINT,
+    fullname: DataTypes.STRING,
     user_id: DataTypes.STRING,
   }, {
     sequelize,

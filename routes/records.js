@@ -96,16 +96,26 @@ router.post('/', verifyapikey, [
       return res.status(400).json({ errors: errors.array() });
     }
     const base64Image = req.body.photo;
-    const base64Data = base64Image.replace(/^data:image\/\w+;base64,/, '');
-    const bufferData = Buffer.from(base64Data, 'base64');
-    await Records.create({
-      question_user_id: req.body.question_user_id,
-      question_id: req.body.question_id,
-      package_question_id: req.body.package_question_id,
-      user_id: req.body.user_id,
-      answer_id: req.body.answer_id,
-      photo: bufferData
-    });
+    if (base64Image) {
+      const base64Data = base64Image.replace(/^data:image\/\w+;base64,/, '');
+      const bufferData = Buffer.from(base64Data, 'base64');
+      await Records.create({
+        question_user_id: req.body.question_user_id,
+        question_id: req.body.question_id,
+        package_question_id: req.body.package_question_id,
+        user_id: req.body.user_id,
+        answer_id: req.body.answer_id,
+        photo: bufferData
+      });
+    } else {
+      await Records.create({
+        question_user_id: req.body.question_user_id,
+        question_id: req.body.question_id,
+        package_question_id: req.body.package_question_id,
+        user_id: req.body.user_id,
+        answer_id: req.body.answer_id,
+      });
+    }
     await QuestionUsers.update({
       answered: true
     }, {
@@ -143,17 +153,28 @@ router.patch('/:questionId/:packageQuestionId', verifyapikey, [
       return res.status(404).json({ message: 'Record not found' });
     }
     const base64Image = req.body.photo;
-    const base64Data = base64Image.replace(/^data:image\/\w+;base64,/, '');
-    const bufferData = Buffer.from(base64Data, 'base64');
-    await Records.update({
-      answer_id: req.body.answer_id,
-      photo: bufferData,
-    }, {
-      where: {
-        question_id: req.params.questionId,
-        package_question_id: req.params.packageQuestionId
-      }
-    });
+    if (base64Image) {
+      const base64Data = base64Image.replace(/^data:image\/\w+;base64,/, '');
+      const bufferData = Buffer.from(base64Data, 'base64');
+      await Records.update({
+        answer_id: req.body.answer_id,
+        photo: bufferData,
+      }, {
+        where: {
+          question_id: req.params.questionId,
+          package_question_id: req.params.packageQuestionId
+        }
+      });
+    } else {
+      await Records.update({
+        answer_id: req.body.answer_id,
+      }, {
+        where: {
+          question_id: req.params.questionId,
+          package_question_id: req.params.packageQuestionId
+        }
+      });
+    }
     return res.json({
       message: 'Record has been updated.'
     });

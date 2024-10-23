@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const verifyapikey = require("../middleware/verifyapitoken");
 const { body, validationResult } = require("express-validator");
-const { PackageQuestionUsers, PackageQuestions, Types } = require("../models");
+const { PackageQuestionUsers, PackageQuestions, Types, Participant } = require("../models");
 
 /* package question users */
 router.get("/", verifyapikey, async (req, res) => {
@@ -21,6 +21,9 @@ router.get("/", verifyapikey, async (req, res) => {
               as: "type",
             },
           ],
+        },{
+          model: Participant,
+          as: "participant",
         },
       ],
       limit: limit,
@@ -37,6 +40,89 @@ router.get("/", verifyapikey, async (req, res) => {
       totalPages: totalPages,
       totalItems: totalItems,
     });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+});
+
+router.get("/requestcamera", async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 5;
+    const offset = (page - 1) * limit;
+    const data = await PackageQuestionUsers.findAll({
+      include: [
+        {
+          model: PackageQuestions,
+          as: "package",
+          include: [
+            {
+              model: Types,
+              as: "type",
+            },
+          ],
+        },
+        {
+          model: Participant,
+          as: "participant",
+        },
+      ],
+      limit: limit,
+      offset: offset,
+      where: {
+        request_camera: true,
+      },
+    });
+
+    const totalItems = await PackageQuestionUsers.count({
+      where: {
+        request_camera: true,
+      },  
+    });
+    const totalPages = Math.ceil(totalItems / limit);
+
+    return res.json({
+      data,
+      limit,
+      currentPage: page,
+      totalPages: totalPages,
+      totalItems: totalItems,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+});
+
+/* package question id */
+router.get("/check/:id", verifyapikey, async (req, res) => {
+  try {
+    const data = await PackageQuestionUsers.findOne({
+      where: {
+        package_question_id: req.params.id,
+      },
+      include: [
+        {
+          model: PackageQuestions,
+          as: "package",
+          include: [
+            {
+              model: Types,
+              as: "type",
+            },
+          ],
+        },
+      ],
+    });
+    if (!data) {
+      return res
+        .status(404)
+        .json({ message: "Package question users not found" });
+    }
+    return res.json(data);
   } catch (error) {
     return res.status(500).json({
       message: error.message,
@@ -186,6 +272,66 @@ router.delete("/:id", verifyapikey, async (req, res) => {
     });
     return res.json({
       message: "Package question user has been deleted.",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+});
+
+/* Update One by ID */
+router.get("/request/:id", verifyapikey, async (req, res) => {
+  try {
+    const data = await PackageQuestionUsers.findOne({
+      where: {
+        id: req.params.id,
+      },
+    });
+    if (!data) {
+      return res
+        .status(404)
+        .json({ message: "Package question user not found" });
+    }
+    await PackageQuestionUsers.update({
+      request_camera: !data.request_camera,
+    },{
+      where: {
+        id: req.params.id,
+      },
+    });
+    return res.json({
+      message: "Package question user request camera has been updated.",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+});
+
+/* Update One by ID */
+router.get("/camera/:id", verifyapikey, async (req, res) => {
+  try {
+    const data = await PackageQuestionUsers.findOne({
+      where: {
+        id: req.params.id,
+      },
+    });
+    if (!data) {
+      return res
+        .status(404)
+        .json({ message: "Package question user not found" });
+    }
+    await PackageQuestionUsers.update({
+      camera_status: !data.camera_status,
+    },{
+      where: {
+        id: req.params.id,
+      },
+    });
+    return res.json({
+      message: "Package question user camera status has been updated.",
     });
   } catch (error) {
     return res.status(500).json({

@@ -11,6 +11,12 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       PackageQuestionUsers.belongsTo(models.PackageQuestions, { foreignKey: 'package_question_id', as: 'package', onDelete: 'RESTRICT', });
+      PackageQuestionUsers.belongsTo(models.Participant, { 
+        foreignKey: 'user_id', 
+        targetKey: 'identify_number',
+        as: 'participant', 
+        onDelete: 'RESTRICT' 
+      });
     }
   }
   PackageQuestionUsers.init({
@@ -20,7 +26,9 @@ module.exports = (sequelize, DataTypes) => {
     date_exam: DataTypes.DATE,
     date_start: DataTypes.DATE,
     date_end: DataTypes.DATE,
-    status: DataTypes.BOOLEAN
+    status: DataTypes.BOOLEAN,
+    request_camera: DataTypes.BOOLEAN,
+    camera_status: DataTypes.BOOLEAN
   }, {
     sequelize,
     modelName: 'PackageQuestionUsers',

@@ -10,9 +10,12 @@ module.exports = {
         COUNT(CASE WHEN a.is_right = TRUE THEN 1 END) AS correct_answers,
         COUNT(CASE WHEN a.is_right = FALSE THEN 1 END) AS incorrect_answers,
         tq.total_questions,
-        qu.user_id
+        qu.user_id,
+        pa.fullname
       FROM
         cbt_question_users qu
+      INNER JOIN
+        participants pa ON qu.user_id = pa.identify_number
       INNER JOIN
         cbt_records r ON qu.question_id = r.question_id
       INNER JOIN
@@ -31,6 +34,7 @@ module.exports = {
       GROUP BY
         qu.package_question_id,
         qu.user_id,
+        pa.fullname,
         pq.name,
         tq.total_questions;
     `);

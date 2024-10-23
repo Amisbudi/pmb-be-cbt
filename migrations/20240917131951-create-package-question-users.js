@@ -35,6 +35,14 @@ module.exports = {
         type: Sequelize.BOOLEAN,
         defaultValue: false
       },
+      request_camera: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false
+      },
+      camera_status: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false
+      },
       created_at: {
         allowNull: false,
         type: Sequelize.DATE
