@@ -22,23 +22,7 @@ module.exports = {
           status: true,
           created_at: new Date(),
           updated_at: new Date(),
-        },{
-          package_question_id: 2,
-          user_id: "3277777777777777",
-          classes: "Reguler",
-          date_exam: (() => {
-            let examDate = new Date();
-            examDate.setSeconds(examDate.getSeconds() + 10);
-            return examDate;
-          })(),
-          date_start: null,
-          date_end: null,
-          request_camera: false,
-          camera_status: false,
-          status: true,
-          created_at: new Date(),
-          updated_at: new Date(),
-        },
+        }
       ],
       {},
     );
