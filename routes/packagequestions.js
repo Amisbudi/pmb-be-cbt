@@ -61,6 +61,7 @@ router.get('/:id', verifyapikey, async (req, res) => {
 router.post('/', verifyapikey, [
   body('type_id').notEmpty(),
   body('name').notEmpty(),
+  body('count_answer').notEmpty(),
 ], async (req, res) => {
   try {
     const errors = validationResult(req);
@@ -70,6 +71,7 @@ router.post('/', verifyapikey, [
     await PackageQuestions.create({
       type_id: req.body.type_id,
       name: req.body.name,
+      count_answer: req.body.count_answer,
     });
     return res.json({
       message: 'Package question has been created.'
@@ -85,6 +87,7 @@ router.post('/', verifyapikey, [
 router.patch('/:id', verifyapikey, [
   body('type_id').notEmpty(),
   body('name').notEmpty(),
+  body('count_answer').notEmpty(),
 ], async (req, res) => {
   try {
     const errors = validationResult(req);
@@ -102,6 +105,7 @@ router.patch('/:id', verifyapikey, [
     await PackageQuestions.update({
       type_id: req.body.type_id,
       name: req.body.name,
+      count_answer: req.body.count_answer,
       status: req.body.status,
     }, {
       where: {

@@ -13,7 +13,10 @@ module.exports = {
         type: Sequelize.BIGINT
       },
       name: {
-        type: Sequelize.STRING
+        type: Sequelize.TEXT
+      },
+      count_answer: {
+        type: Sequelize.INTEGER
       },
       status: {
         type: Sequelize.BOOLEAN,

@@ -12,8 +12,12 @@ module.exports = {
       package_question_id: {
         type: Sequelize.BIGINT
       },
+      naration: {
+        type: Sequelize.TEXT,
+        allowNull: true
+      },
       name: {
-        type: Sequelize.STRING
+        type: Sequelize.TEXT
       },
       image: {
         allowNull: true,

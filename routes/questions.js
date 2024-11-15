@@ -108,14 +108,16 @@ router.post(
   [
     body("package_question_id").notEmpty(),
     body("name").notEmpty(),
-    body("answer_1").notEmpty(),
-    body("answer_1_status").notEmpty(),
-    body("answer_2").notEmpty(),
-    body("answer_2_status").notEmpty(),
-    body("answer_3").notEmpty(),
-    body("answer_3_status").notEmpty(),
-    body("answer_4").notEmpty(),
-    body("answer_4_status").notEmpty(),
+    // body("answer_1").notEmpty(),
+    // body("answer_1_status").notEmpty(),
+    // body("answer_2").notEmpty(),
+    // body("answer_2_status").notEmpty(),
+    // body("answer_3").notEmpty(),
+    // body("answer_3_status").notEmpty(),
+    // body("answer_4").notEmpty(),
+    // body("answer_4_status").notEmpty(),
+    // body("answer_5").notEmpty(),
+    // body("answer_5_status").notEmpty(),
   ],
   async (req, res) => {
     try {
@@ -130,6 +132,7 @@ router.post(
         const bufferData = Buffer.from(base64Data, "base64");
         question = await Questions.create({
           package_question_id: req.body.package_question_id,
+          naration: req.body.naration,
           name: req.body.name,
           image: bufferData,
           status: true,
@@ -137,81 +140,34 @@ router.post(
       } else {
         question = await Questions.create({
           package_question_id: req.body.package_question_id,
+          naration: req.body.naration,
           name: req.body.name,
           status: true,
         });
       }
 
-      if (req.body.answer_1_image) {
-        const base64Image = req.body.answer_1_image;
-        const base64Data = base64Image.replace(/^data:image\/\w+;base64,/, "");
-        const bufferData = Buffer.from(base64Data, "base64");
-        await Answers.create({
-          question_id: question.id,
-          name: req.body.answer_1,
-          image: bufferData,
-          is_right: req.body.answer_1_status,
-        });
-      } else {
-        await Answers.create({
-          question_id: question.id,
-          name: req.body.answer_1,
-          is_right: req.body.answer_1_status,
-        });
-      }
+      for (let i = 0; i < parseInt(req.body.count_answer); i++) {
+        const answerIndex = i + 1;
+        const answerName = req.body[`answer_${answerIndex}`];
+        const answerImage = req.body[`answer_${answerIndex}_image`];
+        const answerStatus = req.body[`answer_${answerIndex}_status`];
 
-      if (req.body.answer_2_image) {
-        const base64Image = req.body.answer_2_image;
-        const base64Data = base64Image.replace(/^data:image\/\w+;base64,/, "");
-        const bufferData = Buffer.from(base64Data, "base64");
-        await Answers.create({
-          question_id: question.id,
-          name: req.body.answer_2,
-          image: bufferData,
-          is_right: req.body.answer_2_status,
-        });
-      } else {
-        await Answers.create({
-          question_id: question.id,
-          name: req.body.answer_2,
-          is_right: req.body.answer_2_status,
-        });
-      }
-
-      if (req.body.answer_3_image) {
-        const base64Image = req.body.answer_3_image;
-        const base64Data = base64Image.replace(/^data:image\/\w+;base64,/, "");
-        const bufferData = Buffer.from(base64Data, "base64");
-        await Answers.create({
-          question_id: question.id,
-          name: req.body.answer_3,
-          image: bufferData,
-          is_right: req.body.answer_3_status,
-        });
-      } else {
-        await Answers.create({
-          question_id: question.id,
-          name: req.body.answer_3,
-          is_right: req.body.answer_3_status,
-        });
-      }
-
-      if (req.body.answer_4_image) {
-        const base64Image = req.body.answer_4_image;
-        const base64Data = base64Image.replace(/^data:image\/\w+;base64,/, "");
-        const bufferData = Buffer.from(base64Data, "base64");
-        await Answers.create({
-          question_id: question.id,
-          name: req.body.answer_4,
-          image: bufferData,
-          is_right: req.body.answer_4_status,
-        });
-      } else {
-        await Answers.create({
-          question_id: question.id,
-          name: req.body.answer_4,
-          is_right: req.body.answer_4_status,
-        });
+        if (answerImage) {
+          const base64Data = answerImage.replace(/^data:image\/\w+;base64,/, "");
+          const bufferData = Buffer.from(base64Data, "base64");
+          await Answers.create({
+            question_id: question.id,
+            name: answerName,
+            image: bufferData,
+            is_right: answerStatus,
+          });
+        } else {
+          await Answers.create({
+            question_id: question.id,
+            name: answerName,
+            is_right: answerStatus,
+          });
+        }
       }
 
       return res.json({
@@ -236,6 +192,16 @@ router.post(
       if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
       }
+      const packageQuestion = await PackageQuestions.findOne({
+        where: {
+          id: req.body.package_question_id,
+        },
+      });
+
+      if (!packageQuestion) {
+        return res.status(404).json({ message: "Package question not found" });
+      }
+      
       const base64Excel = req.body.excel;
 
       const imageSizeInBytes = Buffer.from(
@@ -265,29 +231,13 @@ router.post(
           name: questions[i].question,
           status: true,
         });
-        await Answers.create({
-          question_id: question.id,
-          name: questions[i].answer_1,
-          is_right: questions[i].answer_1_status,
-        });
-
-        await Answers.create({
-          question_id: question.id,
-          name: questions[i].answer_2,
-          is_right: questions[i].answer_2_status,
-        });
-
-        await Answers.create({
-          question_id: question.id,
-          name: questions[i].answer_3,
-          is_right: questions[i].answer_3_status,
-        });
-
-        await Answers.create({
-          question_id: question.id,
-          name: questions[i].answer_4,
-          is_right: questions[i].answer_4_status,
-        });
+        for (let index = 0; index < packageQuestion.count_answer; index++) {
+          await Answers.create({
+            question_id: question.id,
+            name: questions[i][`answer_${index + 1}`],
+            is_right: questions[i][`answer_${index + 1}_status`], 
+          });
+        }
       }
       return res.json({
         message: "Question import has been succesfully.",
@@ -307,24 +257,27 @@ router.patch(
   [
     body("package_question_id").notEmpty(),
     body("name").notEmpty(),
-    body("answer_1").notEmpty(),
-    body("answer_1_id").notEmpty(),
-    body("answer_1_status").notEmpty(),
-    body("answer_2").notEmpty(),
-    body("answer_2_id").notEmpty(),
-    body("answer_2_status").notEmpty(),
-    body("answer_3").notEmpty(),
-    body("answer_3_id").notEmpty(),
-    body("answer_3_status").notEmpty(),
-    body("answer_4").notEmpty(),
-    body("answer_4_id").notEmpty(),
-    body("answer_4_status").notEmpty(),
+    // body("answer_1").notEmpty(),
+    // body("answer_1_id").notEmpty(),
+    // body("answer_1_status").notEmpty(),
+    // body("answer_2").notEmpty(),
+    // body("answer_2_id").notEmpty(),
+    // body("answer_2_status").notEmpty(),
+    // body("answer_3").notEmpty(),
+    // body("answer_3_id").notEmpty(),
+    // body("answer_3_status").notEmpty(),
+    // body("answer_4").notEmpty(),
+    // body("answer_4_id").notEmpty(),
+    // body("answer_4_status").notEmpty(),
+    // body("answer_5").notEmpty(),
+    // body("answer_5_id").notEmpty(),
+    // body("answer_5_status").notEmpty(),
   ],
   async (req, res) => {
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
+        return res.status(404).json({ errors: errors.array() });
       }
       const data = await Questions.findOne({
         where: {
@@ -340,6 +293,7 @@ router.patch(
           await Questions.update(
             {
               package_question_id: req.body.package_question_id,
+              naration: req.body.naration,
               name: req.body.name,
               status: req.body.status,
             },
@@ -369,6 +323,7 @@ router.patch(
           await Questions.update(
             {
               package_question_id: req.body.package_question_id,
+              naration: req.body.naration,
               name: req.body.name,
               image: bufferData,
               status: req.body.status,
@@ -384,6 +339,7 @@ router.patch(
         await Questions.update(
           {
             package_question_id: req.body.package_question_id,
+            naration: req.body.naration,
             name: req.body.name,
             status: req.body.status,
           },
@@ -395,236 +351,69 @@ router.patch(
         );
       }
 
-      if (req.body.answer_1_image) {
-        if (req.body.answer_1_image.type === "Buffer") {
-          await Answers.update(
-            {
-              name: req.body.answer_1,
-              is_right: req.body.answer_1_status,
-            },
-            {
-              where: {
-                id: req.body.answer_1_id,
-                question_id: req.params.id,
-              },
-            },
-          );
-        } else {
-          const base64Image = req.body.answer_1_image;
-          const imageSizeInBytes = Buffer.from(
-            base64Image.replace(/^data:image\/\w+;base64,/, ""),
-            "base64",
-          ).length;
-          const maxSizeInBytes = 1 * 1024 * 1024;
-          if (imageSizeInBytes > maxSizeInBytes) {
-            return res.status(400).json({ message: "File size max 1MB." });
-          }
-          const base64Data = base64Image.replace(
-            /^data:image\/\w+;base64,/,
-            "",
-          );
-          const bufferData = Buffer.from(base64Data, "base64");
-          await Answers.update(
-            {
-              name: req.body.answer_1,
-              image: bufferData,
-              is_right: req.body.answer_1_status,
-            },
-            {
-              where: {
-                id: req.body.answer_1_id,
-                question_id: req.params.id,
-              },
-            },
-          );
-        }
-      } else {
-        await Answers.update(
-          {
-            name: req.body.answer_1,
-            is_right: req.body.answer_1_status,
-          },
-          {
-            where: {
-              id: req.body.answer_1_id,
-              question_id: req.params.id,
-            },
-          },
-        );
-      }
+      for (let i = 0; i < parseInt(req.body.count_answer); i++) {
+        const answerIndex = i + 1;
+        const answerName = req.body[`answer_${answerIndex}`];
+        const answerId = req.body[`answer_${answerIndex}_id`];
+        const answerImage = req.body[`answer_${answerIndex}_image`];
+        const answerStatus = req.body[`answer_${answerIndex}_status`];
 
-      if (req.body.answer_2_image) {
-        if (req.body.answer_2_image.type === "Buffer") {
-          await Answers.update(
-            {
-              name: req.body.answer_2,
-              is_right: req.body.answer_2_status,
-            },
-            {
-              where: {
-                id: req.body.answer_2_id,
-                question_id: req.params.id,
+        if (answerImage) {
+          if (answerImage.type === "Buffer") {
+            await Answers.update(
+              {
+                name: answerName,
+                is_right: answerStatus,
               },
-            },
-          );
-        } else {
-          const base64Image = req.body.answer_2_image;
-          const imageSizeInBytes = Buffer.from(
-            base64Image.replace(/^data:image\/\w+;base64,/, ""),
-            "base64",
-          ).length;
-          const maxSizeInBytes = 1 * 1024 * 1024;
-          if (imageSizeInBytes > maxSizeInBytes) {
-            return res.status(400).json({ message: "File size max 1MB." });
+              {
+                where: {
+                  id: answerId,
+                  question_id: req.params.id,
+                },
+              },
+            );
+          } else {
+            const imageSizeInBytes = Buffer.from(
+              answerImage.replace(/^data:image\/\w+;base64,/, ""),
+              "base64",
+            ).length;
+            const maxSizeInBytes = 1 * 1024 * 1024;
+            if (imageSizeInBytes > maxSizeInBytes) {
+              return res.status(400).json({ message: "File size max 1MB." });
+            }
+            const base64Data = answerImage.replace(
+              /^data:image\/\w+;base64,/,
+              "",
+            );
+            const bufferData = Buffer.from(base64Data, "base64");
+            await Answers.update(
+              {
+                name: answerName,
+                image: bufferData,
+                is_right: answerStatus,
+              },
+              {
+                where: {
+                  id: answerId,
+                  question_id: req.params.id,
+                },
+              },
+            );
           }
-          const base64Data = base64Image.replace(
-            /^data:image\/\w+;base64,/,
-            "",
-          );
-          const bufferData = Buffer.from(base64Data, "base64");
+        } else {
           await Answers.update(
             {
-              name: req.body.answer_2,
-              image: bufferData,
-              is_right: req.body.answer_2_status,
+              name: answerName,
+              is_right: answerStatus,
             },
             {
               where: {
-                id: req.body.answer_2_id,
+                id: answerId,
                 question_id: req.params.id,
               },
             },
           );
         }
-      } else {
-        await Answers.update(
-          {
-            name: req.body.answer_2,
-            is_right: req.body.answer_2_status,
-          },
-          {
-            where: {
-              id: req.body.answer_2_id,
-              question_id: req.params.id,
-            },
-          },
-        );
-      }
-
-      if (req.body.answer_3_image) {
-        if (req.body.answer_3_image.type === "Buffer") {
-          await Answers.update(
-            {
-              name: req.body.answer_3,
-              is_right: req.body.answer_3_status,
-            },
-            {
-              where: {
-                id: req.body.answer_3_id,
-                question_id: req.params.id,
-              },
-            },
-          );
-        } else {
-          const base64Image = req.body.answer_3_image;
-          const imageSizeInBytes = Buffer.from(
-            base64Image.replace(/^data:image\/\w+;base64,/, ""),
-            "base64",
-          ).length;
-          const maxSizeInBytes = 1 * 1024 * 1024;
-          if (imageSizeInBytes > maxSizeInBytes) {
-            return res.status(400).json({ message: "File size max 1MB." });
-          }
-          const base64Data = base64Image.replace(
-            /^data:image\/\w+;base64,/,
-            "",
-          );
-          const bufferData = Buffer.from(base64Data, "base64");
-          await Answers.update(
-            {
-              name: req.body.answer_3,
-              image: bufferData,
-              is_right: req.body.answer_3_status,
-            },
-            {
-              where: {
-                id: req.body.answer_3_id,
-                question_id: req.params.id,
-              },
-            },
-          );
-        }
-      } else {
-        await Answers.update(
-          {
-            name: req.body.answer_3,
-            is_right: req.body.answer_3_status,
-          },
-          {
-            where: {
-              id: req.body.answer_3_id,
-              question_id: req.params.id,
-            },
-          },
-        );
-      }
-
-      if (req.body.answer_4_image) {
-        if (req.body.answer_4_image.type === "Buffer") {
-          await Answers.update(
-            {
-              name: req.body.answer_4,
-              is_right: req.body.answer_4_status,
-            },
-            {
-              where: {
-                id: req.body.answer_4_id,
-                question_id: req.params.id,
-              },
-            },
-          );
-        } else {
-          const base64Image = req.body.answer_4_image;
-          const imageSizeInBytes = Buffer.from(
-            base64Image.replace(/^data:image\/\w+;base64,/, ""),
-            "base64",
-          ).length;
-          const maxSizeInBytes = 1 * 1024 * 1024;
-          if (imageSizeInBytes > maxSizeInBytes) {
-            return res.status(400).json({ message: "File size max 1MB." });
-          }
-          const base64Data = base64Image.replace(
-            /^data:image\/\w+;base64,/,
-            "",
-          );
-          const bufferData = Buffer.from(base64Data, "base64");
-          await Answers.update(
-            {
-              name: req.body.answer_4,
-              image: bufferData,
-              is_right: req.body.answer_4_status,
-            },
-            {
-              where: {
-                id: req.body.answer_4_id,
-                question_id: req.params.id,
-              },
-            },
-          );
-        }
-      } else {
-        await Answers.update(
-          {
-            name: req.body.answer_4,
-            is_right: req.body.answer_4_status,
-          },
-          {
-            where: {
-              id: req.body.answer_4_id,
-              question_id: req.params.id,
-            },
-          },
-        );
       }
 
       return res.json({

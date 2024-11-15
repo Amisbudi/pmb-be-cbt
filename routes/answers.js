@@ -75,6 +75,9 @@ router.get('/question/:questionId', verifyapikey, async (req, res) => {
           model: Questions,
           as: "question",
         },
+      ],
+      order: [
+        ['id', 'ASC']
       ]
     });
     if (!data) {
