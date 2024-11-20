@@ -2,42 +2,36 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('cbt_questions', {
+    await queryInterface.createTable('cbt_group_questions', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.BIGINT
-      },
-      package_question_id: {
-        type: Sequelize.BIGINT
-      },
-      naration: {
-        type: Sequelize.TEXT,
-        allowNull: true
+        type: Sequelize.INTEGER
       },
       name: {
-        type: Sequelize.TEXT
+        type: Sequelize.STRING
+      },
+      naration: {
+        type: Sequelize.STRING
+      },
+      duration: {
+        type: Sequelize.INTEGER
       },
       image: {
-        allowNull: true,
-        type: Sequelize.BLOB,
+        type: Sequelize.BLOB
       },
-      status: {
-        type: Sequelize.BOOLEAN,
-        defaultValue: true,
-      },
-      created_at: {
+      createdAt: {
         allowNull: false,
         type: Sequelize.DATE
       },
-      updated_at: {
+      updatedAt: {
         allowNull: false,
         type: Sequelize.DATE
       }
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('cbt_questions');
+    await queryInterface.dropTable('GroupQuestions');
   }
 };

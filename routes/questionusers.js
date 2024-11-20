@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const verifyapikey = require('../middleware/verifyapitoken');
 const { body, validationResult } = require('express-validator');
-const { QuestionUsers, PackageQuestions, PackageQuestionUsers, Questions, ViewQuestionUsers, Records } = require('../models');
+const { QuestionUsers, GroupQuestion, PackageQuestions, PackageQuestionUsers, Questions, ViewQuestionUsers, Records } = require('../models');
 
 /* question users */
 router.get('/', verifyapikey, async (req, res) => {
@@ -78,10 +78,15 @@ router.get('/:questionNumber/:packageQuestion', verifyapikey, async (req, res) =
             model: PackageQuestions,
             as: "package"
           }
-        }, {
+        },
+        {
           model: PackageQuestions,
           as: "package",
         },
+        {
+          model: GroupQuestion,
+          as: 'group_questions'
+        }
       ]
     });
     if (!data) {
@@ -115,6 +120,10 @@ router.get('/questions/:packageQuestionId/:userId', verifyapikey, async (req, re
           model: PackageQuestions,
           as: "package",
         },
+        {
+          model: GroupQuestion,
+          as: 'group_questions'
+        }
       ]
     });
     if (!data) {
@@ -148,6 +157,10 @@ router.get('/packagequestion/:packageQuestionId/:userId', verifyapikey, async (r
           model: PackageQuestions,
           as: "package",
         },
+        {
+          model: GroupQuestion,
+          as: 'group_questions'
+        }
       ]
     });
     if (!data) {

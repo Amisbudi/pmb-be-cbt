@@ -3,7 +3,7 @@ const router = express.Router();
 const verifyapikey = require("../middleware/verifyapitoken");
 const XLSX = require("xlsx");
 const { body, validationResult } = require("express-validator");
-const { Questions, PackageQuestions, Answers } = require("../models");
+const { Questions, PackageQuestions, Answers, GroupQuestion } = require("../models");
 
 /* questions */
 router.get("/", verifyapikey, async (req, res) => {
@@ -16,6 +16,10 @@ router.get("/", verifyapikey, async (req, res) => {
         {
           model: PackageQuestions,
           as: "package",
+        },
+        {
+          model: GroupQuestion,
+          as: "group_questions",
         },
       ],
       limit: limit,
@@ -132,6 +136,7 @@ router.post(
         const bufferData = Buffer.from(base64Data, "base64");
         question = await Questions.create({
           package_question_id: req.body.package_question_id,
+          id_group_questions: req.body.id_group_questions,
           naration: req.body.naration,
           name: req.body.name,
           image: bufferData,
@@ -140,6 +145,7 @@ router.post(
       } else {
         question = await Questions.create({
           package_question_id: req.body.package_question_id,
+          id_group_questions: req.body.id_group_questions,
           naration: req.body.naration,
           name: req.body.name,
           status: true,
@@ -293,6 +299,7 @@ router.patch(
           await Questions.update(
             {
               package_question_id: req.body.package_question_id,
+              id_group_questions: req.body.id_group_questions,
               naration: req.body.naration,
               name: req.body.name,
               status: req.body.status,
@@ -323,6 +330,7 @@ router.patch(
           await Questions.update(
             {
               package_question_id: req.body.package_question_id,
+              id_group_questions: req.body.id_group_questions,
               naration: req.body.naration,
               name: req.body.name,
               image: bufferData,
@@ -339,6 +347,7 @@ router.patch(
         await Questions.update(
           {
             package_question_id: req.body.package_question_id,
+            id_group_questions: req.body.id_group_questions,
             naration: req.body.naration,
             name: req.body.name,
             status: req.body.status,

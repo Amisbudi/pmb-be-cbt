@@ -12,12 +12,14 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       QuestionUsers.belongsTo(models.Questions, { foreignKey: 'question_id', as: 'question', onDelete: 'RESTRICT', });
       QuestionUsers.belongsTo(models.PackageQuestions, { foreignKey: 'package_question_id', as: 'package', onDelete: 'RESTRICT', });
+      QuestionUsers.belongsTo(models.GroupQuestion, { foreignKey: 'id_grup_questions', as: 'group_questions', onDelete: 'RESTRICT'});
     }
   }
   QuestionUsers.init({
     number: DataTypes.INTEGER,
     question_id: DataTypes.BIGINT,
     package_question_id: DataTypes.BIGINT,
+    id_grup_questions: { type: DataTypes.BIGINT, allowNull: true },
     user_id: DataTypes.STRING,
     date_start: DataTypes.DATE,
     date_end: DataTypes.DATE,

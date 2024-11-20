@@ -10,6 +10,7 @@ const answersRouter = require('./routes/answers');
 const recordsRouter = require('./routes/records');
 const questionsRouter = require('./routes/questions');
 const questionUsersRouter = require('./routes/questionusers');
+const groupQuestionsRouter = require('./routes/groupquestions');
 const packagequestionsRouter = require('./routes/packagequestions');
 const packagequestionusersRouter = require('./routes/packagequestionusers');
 
@@ -28,6 +29,7 @@ app.use('/answers', answersRouter);
 app.use('/records', recordsRouter);
 app.use('/questions', questionsRouter);
 app.use('/questionusers', questionUsersRouter);
+app.use('/groupquestions', groupQuestionsRouter);
 app.use('/packagequestions', packagequestionsRouter);
 app.use('/packagequestionusers', packagequestionusersRouter);
 

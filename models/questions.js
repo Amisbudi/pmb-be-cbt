@@ -14,10 +14,12 @@ module.exports = (sequelize, DataTypes) => {
       Questions.hasMany(models.QuestionUsers, { foreignKey: 'question_id' });
       Questions.hasMany(models.Records, { foreignKey: 'question_id' });
       Questions.belongsTo(models.PackageQuestions, { foreignKey: 'package_question_id', as: 'package', onDelete: 'RESTRICT', });
+      Questions.belongsTo(models.GroupQuestion, { foreignKey: 'id_group_questions', as: 'group_questions', onDelete: 'RESTRICT'});
     }
   }
   Questions.init({
     package_question_id: DataTypes.BIGINT,
+    id_group_questions: { type: DataTypes.BIGINT, allowNull: true },
     naration: DataTypes.TEXT,
     name: DataTypes.TEXT,
     image: DataTypes.BLOB('medium'),
