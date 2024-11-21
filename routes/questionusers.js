@@ -12,10 +12,13 @@ router.get('/', verifyapikey, async (req, res) => {
         {
           model: Questions,
           as: "question",
-          include: {
+          include: [{
             model: PackageQuestions,
             as: "package"
-          }
+          }, {
+           model: GroupQuestion,
+           as: 'group_questions'
+          }]
         }, {
           model: PackageQuestions,
           as: "package",
@@ -74,19 +77,20 @@ router.get('/:questionNumber/:packageQuestion', verifyapikey, async (req, res) =
         {
           model: Questions,
           as: "question",
-          include: {
-            model: PackageQuestions,
-            as: "package"
-          }
+          include: [
+            {
+              model: PackageQuestions,
+              as: "package"
+            },{
+              model: GroupQuestion,
+              as: 'group_questions'
+            }
+          ]
         },
         {
           model: PackageQuestions,
           as: "package",
         },
-        {
-          model: GroupQuestion,
-          as: 'group_questions'
-        }
       ]
     });
     if (!data) {
@@ -120,10 +124,6 @@ router.get('/questions/:packageQuestionId/:userId', verifyapikey, async (req, re
           model: PackageQuestions,
           as: "package",
         },
-        {
-          model: GroupQuestion,
-          as: 'group_questions'
-        }
       ]
     });
     if (!data) {
@@ -149,18 +149,19 @@ router.get('/packagequestion/:packageQuestionId/:userId', verifyapikey, async (r
         {
           model: Questions,
           as: "question",
-          include: {
-            model: PackageQuestions,
-            as: "package"
-          }
+          include: [
+            {
+              model: PackageQuestions,
+              as: "package"
+            },{
+              model: GroupQuestion,
+              as: 'group_questions'
+            }
+          ]
         }, {
           model: PackageQuestions,
           as: "package",
         },
-        {
-          model: GroupQuestion,
-          as: 'group_questions'
-        }
       ]
     });
     if (!data) {

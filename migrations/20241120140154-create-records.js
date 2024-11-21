@@ -24,6 +24,10 @@ module.exports = {
       answer_id: {
         type: Sequelize.BIGINT
       },
+      id_group_questions: {
+        type: Sequelize.BIGINT,
+        allowNull: true,
+      },
       photo: {
         allowNull: true,
         type: Sequelize.BLOB,

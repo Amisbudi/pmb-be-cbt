@@ -18,7 +18,7 @@ module.exports = {
       package_question_id: {
         type: Sequelize.BIGINT
       },
-      id_grup_questions: {
+      id_group_questions: {
         type: Sequelize.BIGINT,
         allowNull: true,
       },
