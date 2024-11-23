@@ -33,24 +33,55 @@ router.get('/', verifyapikey, async (req, res) => {
   }
 });
 
-/* result for answers */
-router.get(`/results`, verifyapikey, async(req, res) => {
+router.get("/image/:id", async (req, res) => {
   try {
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 5;
+    const data = await Records.findOne({
+      where: {
+        id: req.params.id,
+      },
+    });
+
+    const image = data.essay_image
+    if (!data) {
+      return res.status(404).json({ message: "Question not found" });
+    }
+
+    if (!image) {
+      return res
+        .status(404)
+        .json({ message: "No image found for this record" });
+    }
+   
+    res.set("Content-Type", "image/png");
+    res.send(image);
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+});
+
+/* result for answers */
+router.get(`/results`, verifyapikey, async (req, res) => {
+  try {
+  
+    const page = Math.max(1, parseInt(req.query.page)) || 1;
+    const limit = Math.min(Math.max(1, parseInt(req.query.limit)), 100) || 5; 
     const offset = (page - 1) * limit;
 
-    const data = await ViewQuestionUsers.findAll({
+    const totalItems = await ViewQuestionUsers.count();
+    const totalPages = Math.ceil(totalItems / limit);
+
+    // Query database
+    const { rows: data } = await ViewQuestionUsers.findAndCountAll({
       attributes: {
-        exclude: ['id', 'createdAt', 'updatedAt']
+        exclude: ['id', 'createdAt', 'updatedAt'],
       },
       limit: limit,
       offset: offset,
     });
 
-    const totalItems = await ViewQuestionUsers.count();
-    const totalPages = Math.ceil(totalItems / limit);
-
+    // Response ke client
     return res.json({
       data,
       limit,
@@ -64,6 +95,7 @@ router.get(`/results`, verifyapikey, async(req, res) => {
     });
   }
 });
+
 
 /* question by question number & package question */
 router.get('/:questionNumber/:packageQuestion', verifyapikey, async (req, res) => {

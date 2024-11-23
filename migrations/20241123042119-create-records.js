@@ -32,6 +32,14 @@ module.exports = {
         allowNull: true,
         type: Sequelize.BLOB,
       },
+      essay_image: {
+        allowNull: true,
+        type: Sequelize.BLOB,
+      },
+      essay_image_result: {
+        allowNull: true,
+        type: Sequelize.BIGINT,
+      },
       created_at: {
         allowNull: false,
         type: Sequelize.DATE

@@ -18,6 +18,9 @@ module.exports = {
       count_answer: {
         type: Sequelize.INTEGER
       },
+      type_of_question: {
+        type: Sequelize.TEXT
+      },
       status: {
         type: Sequelize.BOOLEAN,
         defaultValue: true,

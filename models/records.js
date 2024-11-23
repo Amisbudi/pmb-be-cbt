@@ -23,8 +23,10 @@ module.exports = (sequelize, DataTypes) => {
     user_id: DataTypes.STRING,
     id_group_questions: { type: DataTypes.BIGINT, allowNull: true },
     answer_id: DataTypes.BIGINT,
-    photo: DataTypes.BLOB('medium')
-  }, {
+    photo: DataTypes.BLOB('medium'),
+    essay_image: DataTypes.BLOB('medium'),
+    essay_image_result: DataTypes.BIGINT
+  },{
     sequelize,
     modelName: 'Records',
     tableName: 'cbt_records',
