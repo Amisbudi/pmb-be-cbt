@@ -31,6 +31,33 @@ router.get('/', verifyapikey, async (req, res) => {
   }
 });
 
+router.get("/img/:id", async (req, res) => {
+  try {
+    const data = await Records.findOne({
+      where: {
+        id: req.params.id,
+      },
+    });
+
+    if (!data) {
+      return res.status(404).json({ message: "Question not found" });
+    }
+
+    if (!data.essay_image) {
+      return res
+        .status(404)
+        .json({ message: "No image found for this record" });
+    }
+    
+    res.set("Content-Type", 'image/jpeg');
+    res.send(data.essay_image);
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+});
+
 /* record by id */
 router.get('/:id', verifyapikey, async (req, res) => {
   try {
@@ -82,56 +109,110 @@ router.get('/question/:questionId/:packageQuestionId', verifyapikey, async (req,
   }
 });
 
-/* record */
-router.post('/', verifyapikey, [
-  body('question_user_id').notEmpty(),
-  body('question_id').notEmpty(),
-  body('package_question_id').notEmpty(),
-  body('answer_id').notEmpty(),
-  body('user_id').notEmpty(),
+router.patch('/essay-image/:id/result', verifyapikey, [
+  body('essay_image_result').notEmpty(),
 ], async (req, res) => {
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    const base64Image = req.body.photo;
-    if (base64Image) {
-      const base64Data = base64Image.replace(/^data:image\/\w+;base64,/, '');
-      const bufferData = Buffer.from(base64Data, 'base64');
-      await Records.create({
-        question_user_id: req.body.question_user_id,
-        question_id: req.body.question_id,
-        package_question_id: req.body.package_question_id,
-        user_id: req.body.user_id,
-        answer_id: req.body.answer_id,
-        photo: bufferData
-      });
-    } else {
-      await Records.create({
-        question_user_id: req.body.question_user_id,
-        question_id: req.body.question_id,
-        package_question_id: req.body.package_question_id,
-        user_id: req.body.user_id,
-        answer_id: req.body.answer_id,
-      });
-    }
-    await QuestionUsers.update({
-      answered: true
-    }, {
+
+    const data = await Records.findOne({
       where: {
-        question_id: req.body.question_id
+        id: req.params.id
       }
     });
-    return res.json({
-      message: 'Record has been created.'
+    if (!data) {
+      return res.status(404).json({ message: 'Record not found' });
+    }
+
+    await Records.update({
+      user_id: req.body.user_id,
+      essay_image_result: req.body.essay_image_result
+    }, {
+      where: {
+        id: req.params.id
+      }
     });
+
+    return res.json({
+      message: 'Record has been created.',
+    });
+
   } catch (error) {
     return res.status(500).json({
-      message: error.message
+      message: error.message,
     });
   }
-});
+})
+
+/* record */
+router.post(
+  '/',
+  verifyapikey,
+  [
+    body('question_user_id').optional(),
+    body('question_id').optional(),
+    body('package_question_id').notEmpty(),
+    body('user_id').optional(),
+    body('answer_id').optional(),
+  ],
+  async (req, res) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+      }
+
+      const { 
+        question_user_id, 
+        question_id, 
+        package_question_id, 
+        user_id, 
+        answer_id, 
+        photo: base64Image, 
+        essay_image: EssayImage 
+      } = req.body;
+
+      const recordData = {
+        question_user_id: question_user_id || null,
+        question_id: question_id || null,
+        package_question_id: package_question_id || '',
+        user_id: user_id || null,
+        answer_id: answer_id || null,
+      };
+
+      if (base64Image) {
+        const base64Data = base64Image.replace(/^data:image\/\w+;base64,/, '');
+        recordData.photo = Buffer.from(base64Data, 'base64');
+      }
+
+      if (EssayImage) {
+        const base64Data = EssayImage.replace(/^data:image\/\w+;base64,/, '');
+        recordData.essay_image = Buffer.from(base64Data, 'base64');
+      }
+
+      await Records.create(recordData);
+
+      if (question_id) {
+        await QuestionUsers.update(
+          { answered: true },
+          { where: { question_id } }
+        );
+      }
+
+      return res.json({
+        message: 'Record has been created.',
+      });
+    } catch (error) {
+      console.error('Error creating record:', error);
+      return res.status(500).json({
+        message: error.message,
+      });
+    }
+  }
+);
 
 /* record by question id & package question id */
 router.patch('/:questionId/:packageQuestionId', verifyapikey, [

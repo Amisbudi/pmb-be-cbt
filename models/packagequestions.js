@@ -21,6 +21,7 @@ module.exports = (sequelize, DataTypes) => {
     type_id: DataTypes.BIGINT,
     name: DataTypes.STRING,
     count_answer: DataTypes.INTEGER,
+    type_of_question: DataTypes.STRING,
     status: DataTypes.BOOLEAN
   }, {
     sequelize,

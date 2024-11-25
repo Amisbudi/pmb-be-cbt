@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const verifyapikey = require('../middleware/verifyapitoken');
-const { Answers, Questions } = require('../models');
+const { Answers, Questions, PackageQuestions } = require('../models');
 
 /* answers */
 router.get('/', verifyapikey, async (req, res) => {
@@ -74,6 +74,11 @@ router.get('/question/:questionId', verifyapikey, async (req, res) => {
         {
           model: Questions,
           as: "question",
+          include: {
+            model: PackageQuestions,
+            as: 'package',
+            attributes: ['type_of_question'],
+          }
         },
       ],
       order: [

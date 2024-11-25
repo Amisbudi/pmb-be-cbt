@@ -2,15 +2,15 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('cbt_question_users', {
+    await queryInterface.createTable('cbt_records', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.BIGINT
       },
-      number: {
-        type: Sequelize.INTEGER,
+      question_user_id: {
+        type: Sequelize.BIGINT
       },
       question_id: {
         type: Sequelize.BIGINT
@@ -18,22 +18,27 @@ module.exports = {
       package_question_id: {
         type: Sequelize.BIGINT
       },
-      id_grup_questions: {
-        type: Sequelize.BIGINT,
-        allowNull: true,
-      },
       user_id: {
         type: Sequelize.STRING
       },
-      date_start: {
-        type: Sequelize.DATE
+      answer_id: {
+        type: Sequelize.BIGINT
       },
-      date_end: {
-        type: Sequelize.DATE
+      id_group_questions: {
+        type: Sequelize.BIGINT,
+        allowNull: true,
       },
-      answered: {
-        type: Sequelize.BOOLEAN,
-        defaultValue: false,
+      photo: {
+        allowNull: true,
+        type: Sequelize.BLOB,
+      },
+      essay_image: {
+        allowNull: true,
+        type: Sequelize.BLOB,
+      },
+      essay_image_result: {
+        allowNull: true,
+        type: Sequelize.BIGINT,
       },
       created_at: {
         allowNull: false,
@@ -46,6 +51,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('cbt_question_users');
+    await queryInterface.dropTable('cbt_records');
   }
 };
