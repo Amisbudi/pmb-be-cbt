@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
   GroupQuestion.init({
     package_question_id: DataTypes.BIGINT,
     name: DataTypes.STRING,
-    naration: DataTypes.STRING,
+    naration: DataTypes.TEXT,
     duration: DataTypes.INTEGER,
     image: DataTypes.BLOB
   }, {
