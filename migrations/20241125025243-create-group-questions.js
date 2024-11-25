@@ -13,7 +13,7 @@ module.exports = {
         type: Sequelize.STRING
       },
       naration: {
-        type: Sequelize.STRING
+        type: Sequelize.TEXT
       },
       duration: {
         type: Sequelize.INTEGER
