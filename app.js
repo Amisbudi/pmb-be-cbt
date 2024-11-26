@@ -17,6 +17,7 @@ const packagequestionusersRouter = require('./routes/packagequestionusers');
 const app = express();
 
 const allowedOrigins = [
+  'https://cbt.trisakti.ac.id',
   'https://be-cbt.trisakti.ac.id',
   'https://admisi.trisakti.ac.id',
 ];
