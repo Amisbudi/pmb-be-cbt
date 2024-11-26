@@ -16,7 +16,9 @@ const packagequestionusersRouter = require('./routes/packagequestionusers');
 
 const app = express();
 
-app.use(cors(['https://be-cbt.trisakti.ac.id', 'https://admisi.trisakti.ac.id]));
+app.use(cors({
+    origin: ['https://be-cbt.trisakti.ac.id', 'https://admisi.trisakti.ac.id', 'http://localhost:3000’],
+}));
 app.use(logger('dev'));
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
