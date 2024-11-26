@@ -16,9 +16,23 @@ const packagequestionusersRouter = require('./routes/packagequestionusers');
 
 const app = express();
 
-app.use(cors({
-    origin: ['https://be-cbt.trisakti.ac.id', 'https://admisi.trisakti.ac.id', 'http://localhost:3000’],
-}));
+const allowedOrigins = [
+  'https://be-cbt.trisakti.ac.id',
+  'https://admisi.trisakti.ac.id',
+];
+
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
 app.use(logger('dev'));
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
