@@ -3,7 +3,7 @@
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.sequelize.query(`
-      CREATE VIEW viewerquestionsusers AS
+      CREATE VIEW resultsquestions AS
       SELECT
         qu.package_question_id,
         pq.name AS package_name,
@@ -15,6 +15,7 @@ module.exports = {
         pa.fullname,
         r.essay_image,
         r.essay_image_result,
+        r.created_at,
         r.id AS record_id
       FROM
         cbt_question_users qu
@@ -44,10 +45,11 @@ module.exports = {
         tq.total_questions,
         r.essay_image,
         r.essay_image_result,
+        r.created_at, 
         r.id;
     `);
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.sequelize.query('DROP VIEW IF EXISTS viewerquestionsusers;');
+    await queryInterface.sequelize.query('DROP VIEW IF EXISTS resultsquestions');
   }
 };

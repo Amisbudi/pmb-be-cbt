@@ -24,11 +24,12 @@ module.exports = (sequelize, DataTypes) => {
     type_of_question: DataTypes.STRING,
     essay_image: DataTypes.BLOB('medium'),
     essay_image_result: DataTypes.BIGINT,
+    created_at: DataTypes.DATE,
     record_id: DataTypes.BIGINT
   }, {
     sequelize,
     modelName: 'ViewQuestionUsers',
-    tableName: 'viewerquestionsusers',
+    tableName: 'resultsquestions',
     timestamps: false,
   });
   return ViewQuestionUsers;
