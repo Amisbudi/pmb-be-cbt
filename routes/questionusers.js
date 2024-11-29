@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const verifyapikey = require('../middleware/verifyapitoken');
 const { body, validationResult } = require('express-validator');
+const { Op } = require('sequelize');
 const { QuestionUsers, GroupQuestion, PackageQuestions, PackageQuestionUsers, Questions, ViewQuestionUsers, Records } = require('../models');
 
 /* question users */
@@ -64,18 +65,35 @@ router.get("/image/:id", async (req, res) => {
 /* result for answers */
 router.get(`/results`, verifyapikey, async (req, res) => {
   try {
-  
+    console.log('Query parameters:', req.query);
     const page = Math.max(1, parseInt(req.query.page)) || 1;
     const limit = Math.min(Math.max(1, parseInt(req.query.limit)), 100) || 5; 
     const offset = (page - 1) * limit;
 
-    const totalItems = await ViewQuestionUsers.count();
+    const { start_date, end_date } = req.query;
+
+    // Build the where condition dynamically
+    let whereCondition = {};
+    if (start_date || end_date) {
+      whereCondition.created_at = {};
+      if (start_date) {
+        whereCondition.created_at[Op.gte] = new Date(start_date);
+      }
+      if (end_date) {
+        whereCondition.created_at[Op.lte] = new Date(end_date);
+      }
+    }
+
+    const totalItems = await ViewQuestionUsers.count({
+      where: whereCondition,
+    });
+    
     const totalPages = Math.ceil(totalItems / limit);
 
-    // Query database
-    const { rows: data } = await ViewQuestionUsers.findAndCountAll({
+    const data = await ViewQuestionUsers.findAll({
+      where: whereCondition,
       attributes: {
-        exclude: ['id', 'createdAt', 'updatedAt'],
+        exclude: ['id', 'updatedAt'],
       },
       limit: limit,
       offset: offset,
@@ -91,11 +109,10 @@ router.get(`/results`, verifyapikey, async (req, res) => {
     });
   } catch (error) {
     return res.status(500).json({
-      message: error.message
+      message: error.message,
     });
   }
 });
-
 
 /* question by question number & package question */
 router.get('/:questionNumber/:packageQuestion', verifyapikey, async (req, res) => {
