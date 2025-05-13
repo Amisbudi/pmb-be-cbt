@@ -115,11 +115,12 @@ router.get(`/results`, verifyapikey, async (req, res) => {
 });
 
 /* question by question number & package question */
-router.get('/:questionNumber/:packageQuestion', verifyapikey, async (req, res) => {
+router.get('/:questionNumber/:packageQuestion/:noreg', verifyapikey, async (req, res) => {
   try {
     const data = await QuestionUsers.findOne({
       where: {
         number: req.params.questionNumber,
+        registration_number: req.params.noreg,
         package_question_id: req.params.packageQuestion
       },
       include: [
@@ -154,11 +155,12 @@ router.get('/:questionNumber/:packageQuestion', verifyapikey, async (req, res) =
 });
 
 /* question users by package question & user id */
-router.get('/questions/:packageQuestionId/:userId', verifyapikey, async (req, res) => {
+router.get('/questions/:packageQuestionId/:userId/:noreg', verifyapikey, async (req, res) => {
   try {
     const data = await QuestionUsers.findAll({
       where: {
         package_question_id: req.params.packageQuestionId,
+        registration_number: req.params.noreg,
         user_id: req.params.userId
       },
       include: [
@@ -187,11 +189,12 @@ router.get('/questions/:packageQuestionId/:userId', verifyapikey, async (req, re
 });
 
 /* question user by package question id & user id */
-router.get('/packagequestion/:packageQuestionId/:userId', verifyapikey, async (req, res) => {
+router.get('/packagequestion/:packageQuestionId/:userId/:noreg', verifyapikey, async (req, res) => {
   try {
     const data = await QuestionUsers.findAll({
       where: {
         package_question_id: req.params.packageQuestionId,
+        registration_number: req.params.noreg,
         user_id: req.params.userId
       },
       include: [
@@ -261,6 +264,7 @@ router.post('/', verifyapikey, [
         question_id: shuffle.id,
         package_question_id: package.id,
         user_id: req.body.user_id,
+        registration_number: req.body.registration_number,
         date_start: dateStart.toISOString(),
         date_end: dateEnd.toISOString()
       });
@@ -303,11 +307,12 @@ router.delete('/:packageQuestionId', verifyapikey, async (req, res) => {
 });
 
 /* question user result by package & user id */
-router.delete('/results/:packageQuestionId/:userId', verifyapikey, async (req, res) => {
+router.delete('/results/:packageQuestionId/:userId/:noreg', verifyapikey, async (req, res) => {
   try {
     const data = await QuestionUsers.findOne({
       where: {
         package_question_id: req.params.packageQuestionId,
+        registration_number: req.params.noreg,
         user_id: req.params.userId,
       }
     });
@@ -317,6 +322,7 @@ router.delete('/results/:packageQuestionId/:userId', verifyapikey, async (req, r
     await QuestionUsers.destroy({
       where: {
         package_question_id: req.params.packageQuestionId,
+        registration_number: req.params.noreg,
         user_id: req.params.userId,
       }
     });
@@ -329,6 +335,7 @@ router.delete('/results/:packageQuestionId/:userId', verifyapikey, async (req, r
     await Records.destroy({
       where: {
         package_question_id: req.params.packageQuestionId,
+        registration_number: req.params.noreg,
         user_id: req.params.userId,
       }
     });

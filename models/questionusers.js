@@ -21,6 +21,7 @@ module.exports = (sequelize, DataTypes) => {
     package_question_id: DataTypes.BIGINT,
     id_group_questions: { type: DataTypes.BIGINT, allowNull: true },
     user_id: DataTypes.STRING,
+    registration_number: DataTypes.STRING,
     date_start: DataTypes.DATE,
     date_end: DataTypes.DATE,
     answered: DataTypes.BOOLEAN

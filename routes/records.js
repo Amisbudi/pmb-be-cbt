@@ -84,11 +84,12 @@ router.get('/:id', verifyapikey, async (req, res) => {
 });
 
 /* question by question id & package question */
-router.get('/question/:questionId/:packageQuestionId', verifyapikey, async (req, res) => {
+router.get('/question/:questionId/:packageQuestionId/:noreg', verifyapikey, async (req, res) => {
   try {
     const data = await Records.findOne({
       where: {
         question_id: req.params.questionId,
+        registration_number: req.params.noreg,
         package_question_id: req.params.packageQuestionId
       },
       include: [
@@ -129,6 +130,7 @@ router.patch('/essay-image/:id/result', verifyapikey, [
 
     await Records.update({
       user_id: req.body.user_id,
+      registration_number: req.body.registration_number,
       essay_image_result: req.body.essay_image_result
     }, {
       where: {
@@ -171,6 +173,7 @@ router.post(
         package_question_id, 
         user_id, 
         answer_id, 
+        registration_number,
         photo: base64Image, 
         essay_image: EssayImage 
       } = req.body;
@@ -180,6 +183,7 @@ router.post(
         question_id: question_id || null,
         package_question_id: package_question_id || '',
         user_id: user_id || null,
+        registration_number: registration_number || '',
         answer_id: answer_id || null,
       };
 
@@ -215,8 +219,9 @@ router.post(
 );
 
 /* record by question id & package question id */
-router.patch('/:questionId/:packageQuestionId', verifyapikey, [
+router.patch('/:questionId/:packageQuestionId/:noreg', verifyapikey, [
   body('user_id').notEmpty(),
+  body('registration_number').notEmpty(),
   body('answer_id').notEmpty(),
 ], async (req, res) => {
   try {
@@ -227,6 +232,7 @@ router.patch('/:questionId/:packageQuestionId', verifyapikey, [
     const data = await Records.findOne({
       where: {
         question_id: req.params.questionId,
+        registration_number: req.params.noreg,
         package_question_id: req.params.packageQuestionId
       }
     });
@@ -243,6 +249,7 @@ router.patch('/:questionId/:packageQuestionId', verifyapikey, [
       }, {
         where: {
           question_id: req.params.questionId,
+          registration_number: req.params.noreg,
           package_question_id: req.params.packageQuestionId
         }
       });
@@ -252,6 +259,7 @@ router.patch('/:questionId/:packageQuestionId', verifyapikey, [
       }, {
         where: {
           question_id: req.params.questionId,
+          registration_number: req.params.noreg,
           package_question_id: req.params.packageQuestionId
         }
       });

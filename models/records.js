@@ -21,6 +21,7 @@ module.exports = (sequelize, DataTypes) => {
     question_id: DataTypes.BIGINT,
     package_question_id: DataTypes.BIGINT,
     user_id: DataTypes.STRING,
+    registration_number: DataTypes.STRING,
     id_group_questions: { type: DataTypes.BIGINT, allowNull: true },
     answer_id: DataTypes.BIGINT,
     photo: DataTypes.BLOB('medium'),

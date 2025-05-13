@@ -3,6 +3,7 @@ const router = express.Router();
 const verifyapikey = require("../middleware/verifyapitoken");
 const { body, validationResult } = require("express-validator");
 const { PackageQuestionUsers, PackageQuestions, Types, Participant } = require("../models");
+const { Op } = require("sequelize");
 
 /* package question users */
 router.get("/", verifyapikey, async (req, res) => {
@@ -136,6 +137,9 @@ router.get("/user/:userId", verifyapikey, async (req, res) => {
     const data = await PackageQuestionUsers.findAll({
       where: {
         user_id: req.params.userId,
+        registration_number: {
+          [Op.ne]: null, // memastikan tidak null
+        },
       },
       include: [
         {
